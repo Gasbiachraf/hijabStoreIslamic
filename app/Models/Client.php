@@ -9,7 +9,10 @@ class Client extends Model
     //  
     protected $fillable = [
         "name",
-        "phone"
+        "GSM",
+        "adress",
+        "email",
+        "historique"
     ];
 
     public function commands(){

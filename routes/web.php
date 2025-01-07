@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     Route::put('/clients/update/{id}', [ClientController::class, 'update'])->name('clients.update');
     Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy'])->name('clients.delete');
+    //*Products
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+
 
 
 });

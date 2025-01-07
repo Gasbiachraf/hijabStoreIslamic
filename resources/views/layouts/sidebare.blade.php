@@ -54,7 +54,7 @@
                     </svg>
                 </x-nav-link>
                 {{-- Products index link --}}
-                <x-nav-link href="{{ route('clients.index') }}" route='Products'>
+                <x-nav-link href="{{ route('products.index') }}" route='Products'>
                     <svg fill="#000000" height="30px" width="30px" version="1.1" id="Capa_1"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                         viewBox="0 0 372.372 372.372" xml:space="preserve">
@@ -76,6 +76,8 @@
                         M253.016,102.417h-42.072c-4.411,0-8-3.589-8-8c0-4.411,3.589-8,8-8h42.072c4.411,0,8,3.589,8,8
                        C261.016,98.828,257.427,102.417,253.016,102.417z M306.981,58.658h-3.738H160.716h-3.735V33.155h150V58.658z" />
                         </g>
+                    </svg>
+                </x-nav-link>
                 <x-nav-link href='/addproduct' route='Add Product'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">

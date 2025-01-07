@@ -36,7 +36,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a class="flex" href="">
+                        <a class="flex" href="{{ route('cart.index') }}">
 
                             <button type="button"
                                 class="bg-blue-500 text-white px-3 py-3 rounded-lg shadow hover:bg-blue-600 flex gap-5">

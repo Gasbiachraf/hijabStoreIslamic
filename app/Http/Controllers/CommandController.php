@@ -7,4 +7,9 @@ use Illuminate\Http\Request;
 class CommandController extends Controller
 {
     //
+    public function index(){
+        
+
+        return view('cart.cart');
+    }
 }

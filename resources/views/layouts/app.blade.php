@@ -20,32 +20,21 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen flex" :class="darkmode ? 'bg-[#252529]' : 'bg-gray-100'" x-data="{
-        darkmode: false,
-    }">
+    <div class="min-h-screen flex bg-teta" >
         {{-- @include('layouts.navigation') --}}
 
         <!-- Page Heading -->
         @include('layouts.sidebare')
-        <div class="flex flex-col w-full overflow-y-auto h-screen">
+        <div class="flex flex-col w-full overflow-y-auto h-screen bg-beta">
 
             @isset($header)
 
-                <header class="shadow flex  justify-between items-center w-full transition-all duration-300"
-                    :class="darkmode ? 'bg-black text-white' : 'bg-white'">
+                <header class=" shadow flex  justify-between items-center w-full transition-all duration-300 bg-teta" >
                     <div class="py-[1.25rem] flex gap-x-2 px-4 sm:px-6 lg:px-8 w-full">
-                        <div class="md:hidden">
-                            <input id="checkbox" type="checkbox">
-                            <label class="toggle" for="checkbox">
-                                <div id="bar1" class="bars"></div>
-                                <div id="bar2" class="bars"></div>
-                                <div id="bar3" class="bars"></div>
-                            </label>
-                        </div>
 
                         <div class="flex justify-between items-center w-full">
                             @if (isset($title))
-                                <h2 class="text-alpha leading-tight capitalize font-bold text-xl">
+                                <h2 class=" leading-tight capitalize font-bold text-xl">
                                     {{ $title }}
                                 </h2>
                             @endif
@@ -60,24 +49,15 @@
                         <button class="relative">
                             <svg id="visite_icon" x-on:click="showNotif = !showNotif" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                class="size-6 cursor-pointer" id="notif_bell">
+                                class="size-6 cursor-pointer " id="notif_bell">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                             </svg>
                         </button>
 
-
+                        
                     </div>
 
-
-                    <div class="md:hidden">
-                        <div class="px-[1rem]">
-                            <a href="{{ route('dashboard') }}" class="text-xl  flex   gap-x-3">
-                                <x-application-logo color size="100" />
-                                <span class="mt-2 font-extrabold hidden group-hover:block">LionsGeek</span>
-                            </a>
-                        </div>
-                    </div>
 
                     
                     {{-- drop down --}}
@@ -107,7 +87,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                         </svg>
-                                        <p class="m-0 font-semibold">
+                                        <p class="m-0 font-semibold ">
                                             {{ __('Profile') }}
                                         </p>
                                     </div>
@@ -136,9 +116,7 @@
                     </div>
                 </header>
             @endisset
-            {{-- side bar --}}
-            <!-- Page Content -->
-            <main>
+            <main class="p-[4vw]">
                 {{ $slot }}
             </main>
         </div>

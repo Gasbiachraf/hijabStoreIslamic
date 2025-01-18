@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPSTORM_META\type;
+
 class Inventory extends Model
 {
     //
@@ -12,10 +14,12 @@ class Inventory extends Model
     "postPrice",
     "exPrice",
     "type",
-    "description",
     "product_id"
     ];
 
+    protected $casts = [
+        "type" => "object"
+    ];
     public function product(){
         return $this->belongsTo(Product::class);
     }

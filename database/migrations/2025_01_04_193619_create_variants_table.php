@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
-            $table->string('size');
             $table->string('color');
-            $table->string('image');
             $table->foreignId('inventory_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

@@ -8,8 +8,6 @@ class Variant extends Model
 {
     //
     protected $fillable = [
-        "quantity",
-        "size",
         "color",
         "image",
         "inventory_id",
@@ -25,6 +23,12 @@ class Variant extends Model
         return $this->belongsToMany(Command::class , 'command_variants');
     }
     
+    public function images() {
+        return $this->morphMany(Image::class, 'imageable');
+    }
 
+    public function sizes(){
+        return $this->hasMany(Size::class);
+    }
 
 }

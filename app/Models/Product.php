@@ -12,6 +12,10 @@ class Product extends Model
         "subcategory_id",
         "description",
     ];
+    protected $casts = [
+        'name' => 'object',
+        'description' => 'object',
+    ];
 
 
     public function subcategory (){

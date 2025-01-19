@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight">
-            {{ __('Products') }}
+            {{ __('Cart') }}
         </h2>
     </x-slot>
-    <div class="container mx-auto my-10 p-4">
-        <!-- Cart Title -->
+    <div x-data='{showModal: false}' class="container mx-auto my-10 p-4">
+
         <h1 class="text-3xl font-bold mb-6">Cart</h1>
 
         <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Left Section (Cart Items) -->
+
             <div class="flex-1 bg-white rounded-lg shadow-md p-4">
                 <table class="w-full">
                     <thead>
@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Item 1 -->
+
                         <tr class="border-b">
                             <td class="py-4">Smartwatch</td>
                             <td class="py-4">red</td>
@@ -37,6 +37,7 @@
                             </td>
                             <td class="py-4">398£</td>
                             <td class="py-4">
+
                                 <button class="text-red-500">🗑</button>
                             </td>
                         </tr>
@@ -50,7 +51,7 @@
                 </div>
             </div>
 
-            <!-- Right Section (Summary) -->
+
             <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-4">
                 <h2 class="text-lg font-bold mb-4">Summary</h2>
                 <div class="flex justify-between mb-2">
@@ -90,5 +91,44 @@
                 </div>
             </div>
         </div>
+        <div  class="flex gap-2 items-center">
+
+            <button class="p-4 bg-green-500 " x-on:click.prevent="$dispatch('open-modal','command-modal')">
+                Open modal
+            </button>
+            <x-modal name="command-modal" :show="$errors->userDeletion->isNotEmpty()">
+                <h1 class="text-3xl text-center">
+                    zakaria dahar
+                </h1>
+                <button class="p-4 bg-red-500" x-on:click="$dispatch('close-modal','command-modal')">Close</button>
+            </x-modal>
+        </div>
+
+
+        <button type="button" x-on:click.prevent="$dispatch('open-modal', 'add-category')"
+            class="underline text-blue-500 font-medium cursor-pointer">Add New Category</button>
+        <x-modal name="add-category" :show="$errors->userDeletion->isNotEmpty()">
+            <div class="flex flex-col gap-4 p-5">
+                <label for="">Category Name</label>
+                <input placeholder="name" x-ref='category_name' type="text" name="category_name">
+                <button type="button"
+                    x-on:click.prevent='category=$refs.category_name.value; $dispatch("close-modal", "add-category")'
+                    class="px-3 py-2 bg-gamma rounded text-white w-fit">Submit</button>
+            </div>
+        </x-modal>
+        <div x-data='{showModal: false}' class="flex gap-2 items-center">
+            <h1>Category</h1>
+            <button x-on:click.prevent="$dispatch('open-modal', 'add-category')"
+                class="underline text-blue-500 font-medium cursor-pointer">Add New Category</button>
+            <x-modal name="add-category" :show="$errors->userDeletion->isNotEmpty()">
+                <form class="px-5 py-8 flex flex-col gap-3" action="">
+                    @csrf
+                    <label for="">Category Name</label>
+                    <input placeholder="name" type="text" name="name">
+                    <button class="px-3 py-2 bg-gamma rounded text-white w-fit">Submit</button>
+                </form>
+            </x-modal>
+        </div>
+
     </div>
 </x-app-layout>

@@ -25,4 +25,10 @@
         border-right: 10px solid #fff;
         border-bottom: 5px solid transparent;
     }
+    #infoContainer input,
+    #infoContainer textarea,
+    #infoContainer select {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 }

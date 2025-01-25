@@ -56,17 +56,17 @@ class CommandController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
+        
         $validated = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
             'new_client_name' => 'nullable|required_without:client_id|string|max:255',
             'new_client_phone' => 'nullable|required_without:client_id|string|max:15',
             'new_client_address' => 'nullable|string|max:255',
             'status' => 'required|in:sell,rent',
-            'livraison' => 'required|in:not_delevred,pending,delevred',
-
+            'livraison' => 'required|in:in_present,livraison',
+            
         ]);
+        // dd($request->all());
 
         DB::transaction(function () use ($request) {
             // Add client if new
@@ -91,6 +91,7 @@ class CommandController extends Controller
                 CommandVariant::create([
                     'command_id' => $command->id,
                     'variant_id' => $productData['variant_id'], // Ensure this is the actual ID
+                    'size' => $productData['size'],
                     'quantity' => $productData['quantity'],
                     'salePrice' => $productData['sale_price'],
                 ]);

@@ -31,7 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     //!Commande
     Route::get('/cart', [CommandController::class, 'index'])->name('cart.index');
-    Route::post('/cart/store', [CommandController::class, 'store'])->name('cart.store');
+    Route::post('/cart/store', [ProductController::class, 'store'])->name('cart.store');
+    Route::post('/checkout', [CommandController::class, 'store'])->name('checkout.store');
+
 
 
 

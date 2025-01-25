@@ -14,12 +14,12 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         //
-        $products = [
-            ['id' => 1, 'name' => 'zif 7ayati','subcategory_id'=>1,'description'=>'fabouuuuuuuuuuuuuur'],
-            ['id' => 2, 'name' => 'zif mamati','subcategory_id'=>1,'description'=>'fabouuuuuuuuuuuuuur'],
-        ];
-        foreach ($products as $product) {
-            Product::create($product);
-        }
+        // $products = [
+        //     ['id' => 1, 'name' => 'zif 7ayati','subcategory_id'=>1,'description'=>'fabouuuuuuuuuuuuuur'],
+        //     ['id' => 2, 'name' => 'zif mamati','subcategory_id'=>1,'description'=>'fabouuuuuuuuuuuuuur'],
+        // ];
+        // foreach ($products as $product) {
+        //     Product::create($product);
+        // }
     }
 }

@@ -45,6 +45,14 @@ class CommandController extends Controller
 
         return view('cart.cart', compact('selectedProducts', 'clients'));
     }
+    public function show(){
+
+
+        $commands = Command::all();
+        $commandVariants = CommandVariant::all();
+        // dd($commandVariants);
+        return view('command.index',compact('commands','commandVariants'));
+    }
 
     public function store(Request $request)
     {

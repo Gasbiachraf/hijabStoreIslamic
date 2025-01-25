@@ -10,6 +10,7 @@ class CommandVariant extends Model
     protected $fillable =[
         "quantity",
         "salePrice",
+        "size",
         "command_id",
         "variant_id",
     ];

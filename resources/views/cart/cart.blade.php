@@ -184,9 +184,8 @@
                         <label for="livraison" class="block text-lg font-semibold text-gray-800 mb-2">Delivery</label>
                         <select id="livraison" name="livraison"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            <option value="not_delevred">Not Delivered</option>
-                            <option value="pending">Pending</option>
-                            <option value="delevred">Delivered</option>
+                            <option value="livraison">livraison</option>
+                            <option value="in_present">in present</option>
                         </select>
                     </div>
 

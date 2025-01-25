@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', [CommandController::class, 'index'])->name('cart.index');
     Route::post('/cart/store', [ProductController::class, 'store'])->name('cart.store');
     Route::post('/checkout', [CommandController::class, 'store'])->name('checkout.store');
+    Route::get('/commands', [CommandController::class, 'show'])->name('command.index');
 
 
 

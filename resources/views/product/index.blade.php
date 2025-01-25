@@ -53,7 +53,6 @@
                                                 ];
                                             });
                                         @endphp
-
                                         @foreach ($sizesByColor as $color => $sizes)
                                             <div class="flex  gap-1 mb-2 text-center">
                                                 <!-- Display Color -->

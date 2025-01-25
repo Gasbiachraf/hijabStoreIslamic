@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('quantity');
             $table->integer('salePrice');
+            $table->string('size')->nullable();
             $table->foreignId('command_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('variant_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VariantController;
@@ -35,14 +36,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [CommandController::class, 'store'])->name('checkout.store');
     Route::get('/commands', [CommandController::class, 'show'])->name('command.index');
 
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    Route::delete('/delete/product/{id}', [ProductController::class,'destroy'])->name('product.delete');    
+    Route::put('/update/product/{product}', [VariantController::class,'update'])->name('product.update');    
+    Route::get('/product/{id}', [ProductController::class,'show'])->name('product.show');    
     Route::post('/add_product', [VariantController::class,'store'])->name('product.store');
     Route::get('/addproduct', [VariantController::class,'index'])->name('product.index');
+    Route::delete('/delete/variant/{id}', [VariantController::class,'destroy'])->name('variant.delete'); 
+    Route::get('/restock/variant/{id}', [VariantController::class,'show'])->name('variant.show');    
+    Route::patch('/restock/variant/{product}', [VariantController::class,'restock'])->name('variant.restock');    
+    
+    // images 
+    Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
+    Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
 require __DIR__.'/auth.php';

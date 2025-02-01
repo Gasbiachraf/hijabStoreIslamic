@@ -9,7 +9,6 @@ class arrivalproduct extends Model
     //
     protected $fillable = [
         "arrivalDate",
-        "description",
-        "variant_id",
+        "size_id",
     ];
 }

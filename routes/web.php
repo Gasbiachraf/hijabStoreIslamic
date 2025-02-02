@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
+use App\Http\Controllers\CommandVariantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VariantController;
+use App\Models\CommandVariant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,6 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/store', [ProductController::class, 'store'])->name('cart.store');
     Route::post('/checkout', [CommandController::class, 'store'])->name('checkout.store');
     Route::get('/commands', [CommandController::class, 'show'])->name('command.index');
+    Route::get('/command-variants/{id}/edit', [CommandVariantController::class, 'edit'])->name('commandVariants.edit');
+    Route::patch('/command-variants/{id}', [CommandVariantController::class, 'update'])->name('commandVariants.update');
+    Route::get('/get-sizes/{variantId}', [CommandVariantController::class, 'getSizes']);
+    Route::post('/cart/remove', [CommandController::class, 'removeFromCart'])->name('cart.remove');
+
 
 
 

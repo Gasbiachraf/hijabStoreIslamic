@@ -14,6 +14,10 @@ class CommandVariant extends Model
         "command_id",
         "variant_id",
     ];
+    public function variant()
+{
+    return $this->belongsTo(Variant::class);
+}
 
     
 }

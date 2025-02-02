@@ -45,32 +45,35 @@ class CommandController extends Controller
 
         return view('cart.cart', compact('selectedProducts', 'clients'));
     }
-    public function show(){
+    public function show()
+    {
 
 
         $commands = Command::all();
         $commandVariants = CommandVariant::all();
         // dd($commandVariants);
-        return view('command.index',compact('commands','commandVariants'));
+        return view('command.index', compact('commands', 'commandVariants'));
     }
 
     public function store(Request $request)
     {
-        
+
+
         $validated = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
-            'new_client_name' => 'nullable|required_without:client_id|string|max:255',
-            'new_client_phone' => 'nullable|required_without:client_id|string|max:15',
-            'new_client_address' => 'nullable|string|max:255',
+            'new_client_name' => 'nullable',
+            'new_client_phone' => 'nullable',
+            'new_client_address' => 'nullable',
             'status' => 'required|in:sell,rent',
             'livraison' => 'required|in:in_present,livraison',
-            
+
         ]);
         // dd($request->all());
 
         DB::transaction(function () use ($request) {
             // Add client if new
             $clientId = $request->client_id;
+
             if (!$clientId) {
                 $client = Client::create([
                     'name' => $request->new_client_name,
@@ -115,6 +118,34 @@ class CommandController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Checkout completed successfully!');
     }
+    public function removeFromCart(Request $request)
+    {
+        $cart = session('cart', []);
+        // dump($cart);
+        // dd($request->all()) 
+        // Remove item based on `product_id`, `color`, and `size`
+        foreach ($cart as $key => $item) {
+            if (
+                $item['product_id'] == $request->product_id &&
+                $item['color'] == $request->color &&
+                $item['size'] == $request->size
+            ) {
+                unset($cart[$key]);
+                break;
+            }
+        }
+
+        // Re-index array and save it back to the session
+        session(['cart' => array_values($cart)]);
+
+        return redirect()->back();
+    }
+
+
+
+
+
+
 
 
 }

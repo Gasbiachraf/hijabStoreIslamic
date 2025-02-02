@@ -21,7 +21,7 @@
                             <th class="pb-3">PRICE</th>
                             <th class="pb-3">QUANTITY</th>
                             <th class="pb-3">TOTAL</th>
-                            <th class="pb-3"></th>
+                            <th class="pb-3">SUPRIMER</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +58,14 @@
                                                 {{ $inventory->postPrice }}£
                                             </td>
                                             <td class="py-4">
-                                                <button class="text-red-500 delete-btn"
-                                                    data-variant-id="{{ $variant->id }}"
-                                                    data-size-id="{{ $size->id }}">🗑</button>
+                                                <form action="{{ route('cart.remove') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="color" value="{{ $variant->color }}">
+                                                    <input type="hidden" name="size" value="{{ $size->size }}">
+                                                    <button type="submit" class="text-red-500">🗑</button>
+                                                </form>
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
@@ -77,11 +82,14 @@
                     <span class="font-semibold">Items subtotal: </span>
                     <span id="items-subtotal">691</span>
                 </div>
-
+                <div class="mt-4 flex justify-center items-center  ">
+                    <button class=" w-[30%] bg-blue-600 text-white font-bold py-3 rounded"
+                        x-on:click.prevent="$dispatch('open-modal','command-modal')">Proceed to Checkout</button>
+                </div>
             </div>
 
 
-            <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-4">
+            {{-- <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-4">
                 <h2 class="text-lg font-bold mb-4">Summary</h2>
                 <div class="flex justify-between mb-2">
                     <span>Items subtotal:</span>
@@ -113,11 +121,8 @@
                         <option value="in-present">In Present</option>
                     </select>
                 </div>
-                <div class="mt-4">
-                    <button class="w-full bg-blue-600 text-white font-bold py-3 rounded"
-                        x-on:click.prevent="$dispatch('open-modal','command-modal')">Proceed to Checkout</button>
-                </div>
-            </div>
+                
+            </div> --}}
 
 
 
@@ -127,7 +132,7 @@
             {{-- <button class="p-4 bg-green-500 " >
                 Open modal
             </button> --}}
-            <x-modal name="command-modal"  :show="$errors->userDeletion->isNotEmpty()">
+            <x-modal name="command-modal" :show="$errors->userDeletion->isNotEmpty()">
                 <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}" class="space-y-6">
                     @csrf
 
@@ -155,8 +160,7 @@
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
                             </div>
                             <div class="mb-2">
-                                <label for="client-phone"
-                                    class="block text-sm font-medium text-gray-700">Phone</label>
+                                <label for="client-phone" class="block text-sm font-medium text-gray-700">Phone</label>
                                 <input type="text" id="client-phone" name="new_client_phone"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
                             </div>
@@ -228,16 +232,16 @@
                                                     <!-- Product Price -->
                                                     <td class="py-4">{{ $inventory->postPrice }}£</td>
                                                     <!-- Quantity Selector -->
-                                                    <td class="py-4 "
-                                                        data-variant-id="{{ $variant->id }}"
+                                                    <td class="py-4 " data-variant-id="{{ $variant->id }}"
                                                         data-size-id="{{ $size->id }}">
-                                                        <span class="mx-2 quantity flex items-center justify-center text-center "
+                                                        <span
+                                                            class="mx-2 quantity flex items-center justify-center text-center "
                                                             id="modal-quantity2-{{ $variant->id }}-{{ $size->id }}">1</span>
                                                     </td>
 
                                                     <!-- Subtotal -->
                                                     <td class="py-4"
-                                                        id="subtotal-{{ $variant->id }}-{{ $size->id }}">
+                                                        id="subtotal2-{{ $variant->id }}-{{ $size->id }}">
                                                         {{ $inventory->postPrice }}£
                                                     </td>
                                                     <!-- Delete Button -->
@@ -291,7 +295,6 @@
             const incrementButtons = document.querySelectorAll('.increment-btn');
             const deleteButtons = document.querySelectorAll('.delete-btn');
             const itemsSubtotalElement = document.getElementById('items-subtotal');
-
             // Function to update the total items subtotal
             const updateItemsSubtotal = () => {
                 let total = 0;
@@ -301,7 +304,6 @@
                 });
                 itemsSubtotalElement.textContent = `${total.toFixed(2)}£`;
             };
-
             // Add event listeners to increment and decrement buttons
             decrementButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -315,6 +317,8 @@
 
                     const subtotalElement = document.getElementById(
                         `subtotal-${variantId}-${sizeId}`);
+                    const subtotalElement2 = document.getElementById(
+                        `subtotal2-${variantId}-${sizeId}`);
                     const price = parseFloat(button.closest('tr').querySelector('td:nth-child(5)')
                         .innerText.replace('£', ''));
 
@@ -323,8 +327,9 @@
                         currentQuantity--;
                         quantityElement.textContent = currentQuantity;
                         quantityElement2.textContent = currentQuantity;
-                        
+
                         subtotalElement.textContent = `${(currentQuantity * price).toFixed(2)}£`;
+                        subtotalElement2.textContent = `${(currentQuantity * price).toFixed(2)}£`;
 
                         // Update the overall items subtotal
                         updateItemsSubtotal();
@@ -342,6 +347,8 @@
                         `modal-quantity2-${variantId}-${sizeId}`);
                     const subtotalElement = document.getElementById(
                         `subtotal-${variantId}-${sizeId}`);
+                    const subtotalElement2 = document.getElementById(
+                        `subtotal2-${variantId}-${sizeId}`);
                     const price = parseFloat(button.closest('tr').querySelector('td:nth-child(5)')
                         .innerText.replace('£', ''));
 
@@ -349,8 +356,9 @@
                     currentQuantity++;
                     quantityElement.textContent = currentQuantity;
                     quantityElement2.textContent = currentQuantity;
-                    
+
                     subtotalElement.textContent = `${(currentQuantity * price).toFixed(2)}£`;
+                    subtotalElement2.textContent = `${(currentQuantity * price).toFixed(2)}£`;
 
                     // Update the overall items subtotal
                     updateItemsSubtotal();
@@ -371,7 +379,7 @@
             // Initialize the subtotal calculation on page load
             updateItemsSubtotal();
         });
-        
+
         // 
         document.addEventListener('DOMContentLoaded', () => {
             // Elements for summary and totals

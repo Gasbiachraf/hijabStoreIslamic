@@ -57,8 +57,6 @@ class CommandController extends Controller
 
     public function store(Request $request)
     {
-
-
         $validated = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
             'new_client_name' => 'nullable',
@@ -66,14 +64,10 @@ class CommandController extends Controller
             'new_client_address' => 'nullable',
             'status' => 'required|in:sell,rent',
             'livraison' => 'required|in:in_present,livraison',
-
         ]);
-        // dd($request->all());
 
         DB::transaction(function () use ($request) {
-            // Add client if new
             $clientId = $request->client_id;
-
             if (!$clientId) {
                 $client = Client::create([
                     'name' => $request->new_client_name,
@@ -82,23 +76,20 @@ class CommandController extends Controller
                 ]);
                 $clientId = $client->id;
             }
-
-            // Create command
+            //? making the command iserting of the loop !!!!!!!!
+            $command = Command::create([
+                'client_id' => $clientId,
+                'status' => $request->status,
+                'livraison' => $request->livraison,
+            ]);
             foreach ($request->products as $productId => $productData) {
-                $command = Command::create([
-                    'client_id' => $clientId,
-                    'status' => $request->status,
-                    'livraison' => $request->livraison,
-                ]);
-                // Add products to command_variants
                 CommandVariant::create([
                     'command_id' => $command->id,
-                    'variant_id' => $productData['variant_id'], // Ensure this is the actual ID
+                    'variant_id' => $productData['variant_id'],
                     'size' => $productData['size'],
                     'quantity' => $productData['quantity'],
                     'salePrice' => $productData['sale_price'],
                 ]);
-                // Update the inventory for the size
                 $size = Size::where('variant_id', $productData['variant_id'])
                     ->where('size', $productData['size'])
                     ->firstOrFail();
@@ -107,17 +98,17 @@ class CommandController extends Controller
                     throw new \Exception("Not enough stock for size: {$productData['size']} of variant ID: {$productData['variant_id']}");
                 }
 
-                // Subtract the purchased quantity from the stock
                 $size->update([
                     'quantity' => $size->quantity - $productData['quantity'],
                 ]);
             }
-
         });
+
         session()->forget('cart');
 
         return redirect()->route('products.index')->with('success', 'Checkout completed successfully!');
     }
+
     public function removeFromCart(Request $request)
     {
         $cart = session('cart', []);

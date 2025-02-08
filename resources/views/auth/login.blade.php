@@ -56,7 +56,6 @@
                             <span class="ms-2 text-sm text-gray-300">{{ __('Remember me') }}</span>
                         </label>
                     </div>
-
                     <div class="flex items-center justify-between mt-4">
                         @if (Route::has('password.request'))
                             <a class="underline text-sm text-gray-400 hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 

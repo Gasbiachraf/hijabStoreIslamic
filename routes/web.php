@@ -4,6 +4,7 @@ use App\Http\Controllers\ArrivalproductController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
 use App\Http\Controllers\CommandVariantController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -46,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/arrival', [ArrivalproductController::class, 'index'])->name('arrival.index');
     Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
     Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
+    
+
 
 
 

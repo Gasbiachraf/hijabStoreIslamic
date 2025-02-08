@@ -7,6 +7,7 @@ use App\Http\Controllers\CommandVariantController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VariantController;
 use App\Models\CommandVariant;
@@ -73,4 +74,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
+<<<<<<< HEAD
+// ^^ Blogs :
+Route::get('/blogs' , [BlogController::class , 'index']) ;
+Route::post('blogs/store' , [BlogController::class , 'store'])->name('blog.store');
+Route::put('blogs/update/{blog}' , [BlogController::class , 'update'])->name('blog.update');
+Route::delete('blogs/delete/{blog}' , [BlogController::class , 'delete'])->name('blog.delete');
+
+require __DIR__.'/auth.php';
+=======
 require __DIR__ . '/auth.php';
+>>>>>>> 30d37ad37192fb505abe128fbf897232fd072283

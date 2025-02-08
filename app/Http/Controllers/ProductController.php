@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Inventory;
 use App\Models\Product;
+use App\Models\Subcategory;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 
@@ -16,7 +18,7 @@ class ProductController extends Controller
         $selectedProductIds = session('cart', []);
 
 
-        return view('product.index', compact('inventories','selectedProductIds'));
+        return view('product.index', compact('inventories', 'selectedProductIds'));
     }
     public function store(Request $request)
     {
@@ -53,5 +55,18 @@ class ProductController extends Controller
         ]);
     }
 
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+        $product->delete();
+        return redirect()->route('products.index'); 
+    }
 
+    public function show($id)
+    {
+        $product = Product::find($id);
+        $categories = Category::all();
+        $subCategories = Subcategory::all();
+        return view('product.update_product', compact('product', 'categories', 'subCategories'));
+    }
 }

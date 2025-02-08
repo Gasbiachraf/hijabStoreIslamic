@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArrivalproductController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
 use App\Http\Controllers\CommandVariantController;
@@ -11,7 +12,7 @@ use App\Models\CommandVariant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -41,26 +42,32 @@ Route::middleware('auth')->group(function () {
     Route::patch('/command-variants/{id}', [CommandVariantController::class, 'update'])->name('commandVariants.update');
     Route::get('/get-sizes/{variantId}', [CommandVariantController::class, 'getSizes']);
     Route::post('/cart/remove', [CommandController::class, 'removeFromCart'])->name('cart.remove');
+    //?ArrivalProducts
+    Route::get('/arrival', [ArrivalproductController::class, 'index'])->name('arrival.index');
+    Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
+    Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
 
 
-    
-    
-    
-    
-    
-    
-    Route::delete('/delete/product/{id}', [ProductController::class,'destroy'])->name('product.delete');    
-    Route::put('/update/product/{product}', [VariantController::class,'update'])->name('product.update');    
-    Route::get('/product/{id}', [ProductController::class,'show'])->name('product.show');    
-    Route::post('/add_product', [VariantController::class,'store'])->name('product.store');
-    Route::get('/addproduct', [VariantController::class,'index'])->name('product.index');
-    Route::delete('/delete/variant/{id}', [VariantController::class,'destroy'])->name('variant.delete'); 
-    Route::get('/restock/variant/{id}', [VariantController::class,'show'])->name('variant.show');    
-    Route::patch('/restock/variant/{product}', [VariantController::class,'restock'])->name('variant.restock');    
-    
+
+
+
+
+
+
+
+
+    Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
+    Route::put('/update/product/{product}', [VariantController::class, 'update'])->name('product.update');
+    Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+    Route::post('/add_product', [VariantController::class, 'store'])->name('product.store');
+    Route::get('/addproduct', [VariantController::class, 'index'])->name('product.index');
+    Route::delete('/delete/variant/{id}', [VariantController::class, 'destroy'])->name('variant.delete');
+    Route::get('/restock/variant/{id}', [VariantController::class, 'show'])->name('variant.show');
+    Route::patch('/restock/variant/{product}', [VariantController::class, 'restock'])->name('variant.restock');
+
     // images 
     Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
     Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -16,4 +16,7 @@ class Size extends Model
     {
         return $this->belongsTo(Variant::class);
     }
+    public function arrival(){
+        return $this->hasMany(arrivalproduct::class);
+    }
 }

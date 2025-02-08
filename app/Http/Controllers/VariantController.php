@@ -104,7 +104,8 @@ class VariantController extends Controller
                         ]);
                         arrivalproduct::create([
                             'arrivalDate' => $size->created_at,
-                            'size_id' => $size->id
+                            'size_id' => $size->id,
+                            'quantity' => $quantities[$sizeKey]
                         ]);
                     }
                 }
@@ -230,7 +231,8 @@ class VariantController extends Controller
                     ]);
                     arrivalproduct::create([
                         'arrivalDate' => $addedQt->updated_at,
-                        'size_id' => $addedQt->id
+                        'size_id' => $addedQt->id,
+                        'quantity' => $element
                     ]);
                 }
             }

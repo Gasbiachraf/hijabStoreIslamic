@@ -9,6 +9,12 @@ class arrivalproduct extends Model
     //
     protected $fillable = [
         "arrivalDate",
+        "quantity",
         "size_id",
     ];
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
+    }
 }

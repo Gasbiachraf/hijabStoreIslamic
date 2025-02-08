@@ -13,19 +13,21 @@ class CommandVariantController extends Controller
     public function edit($id)
     {
         $commandVariant = CommandVariant::findOrFail($id);
-    
-        // Fetch all variants for the dropdown
-        $variants = Variant::all();
-    
-        // Fetch sizes only for the current variant
+
+        // Get the product ID from the selected variant
+        $productId = $commandVariant->variant->inventory->product_id;
+
+        // Fetch only variants that belong to the same product
+        $variants = Variant::whereHas('inventory', function ($query) use ($productId) {
+            $query->where('product_id', $productId);
+        })->get();
+
+        // Get sizes for the selected variant
         $sizes = Size::where('variant_id', $commandVariant->variant_id)->get();
-    
-        return view('command.edit', [
-            'commandVariant' => $commandVariant,
-            'variants' => $variants,
-            'sizes' => $sizes, // Only relevant sizes
-        ]);
+
+        return view('command.edit', compact('commandVariant', 'variants', 'sizes'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -72,14 +74,14 @@ class CommandVariantController extends Controller
         return redirect()->route('command.index')->with('success', 'Command updated successfully!');
     }
 
-    
+
     public function getSizes($variantId)
     {
         $sizes = Size::where('variant_id', $variantId)->get(['size']);
-    
+
         return response()->json(['sizes' => $sizes]);
     }
-    
+
 
 
 }

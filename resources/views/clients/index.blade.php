@@ -4,55 +4,61 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <div class="flex flex-col justify-center items-center p-10">
 
-        <div class="w-[80%] h-[70%] p- relative overflow-x-auto shadow-md sm:rounded-lg">
-            <div class="mb-6 flex self-end justify-end ">
-                <a href="{{ route('clients.create') }}">
-                    <button type="button" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600">
-                        Add client
-                    </button>
+    <div class="flex flex-col items-center p-10">
+        <div class="w-full max-w-6xl bg-white shadow-md rounded-lg p-6">
+            <!-- Add Client Button -->
+            <div class="flex justify-end mb-6">
+                <a href="{{ route('clients.create') }}" class="inline-flex items-center bg-blue-500 text-white px-5 py-3 rounded-lg shadow-md transition hover:bg-blue-600">
+                    ➕ Add Client
                 </a>
             </div>
-            <table class="w-full text-sm text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        <th colspan="1" class="px-6 py-3">id</th>
-                        <th colspan="1" class="px-6 py-3">name</th>
-                        <th colspan="1" class="px-6 py-3">GSM</th>
-                        <th colspan="1" class="px-6 py-3">Adress</th>
-                        <th colspan="1" class="px-6 py-3">Email</th>
-                        <th colspan="1" class="px-6 py-3">Historique</th>
-                        <th colspan="1" class="px-6 py-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($clients as $client)
-                        
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <td colspan="1" class="px-6 py-3">{{ $client->id }}</td>
-                        <td colspan="1" class="px-6 py-3">{{ $client->name }}</td>
-                        <td colspan="1" class="px-6 py-3">{{ $client->GSM }}</td>
-                        <td colspan="1" class="px-6 py-3">{{ $client->adress }}</td>
-                        <td colspan="1" class="px-6 py-3">{{ $client->email }}</td>
-                        <td colspan="1" class="px-6 py-3">{{ $client->historique }}</td>
-                        <td colspan="1" class="px-6 py-3 flex gap-4 items-center">
-                            <a href="{{ route('clients.edit', $client->id) }}"
-                                class="bg-blue-500 px-4 py-2 text-white  rounded-lg shadow hover:bg-blue-600">
-                                Edit
-                            </a>
-                            <form action="{{ route('clients.delete', $client->id) }}"
-                                method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-600 p-2 rounded-lg text-white hover:underline"
-                                    onclick="return confirm('Are you sure you wanna delete this client ?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+            <!-- Clients Table -->
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-gray-700">
+                    <thead class="text-xs uppercase bg-gray-100 border-b">
+                        <tr>
+                            <th class="px-6 py-4 text-left">ID</th>
+                            <th class="px-6 py-4 text-left">Name</th>
+                            <th class="px-6 py-4 text-left">GSM</th>
+                            <th class="px-6 py-4 text-left">Address</th>
+                            <th class="px-6 py-4 text-left">Email</th>
+                            <th class="px-6 py-4 text-left">Historique</th>
+                            <th class="px-6 py-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($clients as $client)
+                            <tr class="border-b even:bg-gray-100 hover:bg-gray-200 transition">
+                                <td class="px-6 py-4">{{ $client->id }}</td>
+                                <td class="px-6 py-4">{{ $client->name }}</td>
+                                <td class="px-6 py-4">{{ $client->GSM }}</td>
+                                <td class="px-6 py-4">{{ $client->adress }}</td>
+                                <td class="px-6 py-4">{{ $client->email }}</td>
+                                <td class="px-6 py-4">{{ $client->historique }}</td>
+                                <td class="px-6 py-4 flex items-center justify-center gap-x-4">
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('clients.edit', $client->id) }}" 
+                                        class="bg-blue-500 px-4 py-2 text-white rounded-lg shadow-md transition hover:bg-blue-600">
+                                        ✏️ Edit
+                                    </a>
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('clients.delete', $client->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this client?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                            class="bg-red-600 px-4 py-2 text-white rounded-lg shadow-md transition hover:bg-red-700">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

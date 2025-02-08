@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('arrivalproducts', function (Blueprint $table) {
             $table->id();
             $table->date('arrivalDate');
+            $table->integer('quantity');
             $table->foreignId('size_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

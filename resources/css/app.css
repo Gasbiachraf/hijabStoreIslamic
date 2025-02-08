@@ -32,3 +32,15 @@
         border-radius: 5px;
     }
 }
+        
+
+.invisible-scrollbar::-webkit-scrollbar{
+    width: 4px;
+    background-color: gainsboro;
+    border-radius: 6px;
+}
+.invisible-scrollbar::-webkit-scrollbar-thumb {
+    width: 4px;
+    background: black;
+    border-radius: 10px;
+}

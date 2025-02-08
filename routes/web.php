@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VariantController;
 use Illuminate\Support\Facades\Route;
@@ -44,5 +45,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/add_product', [VariantController::class,'store'])->name('product.store');
     Route::get('/addproduct', [VariantController::class,'index'])->name('product.index');
 });
+
+// ^^ Blogs :
+Route::get('/blogs' , [BlogController::class , 'index']) ;
+Route::post('blogs/store' , [BlogController::class , 'store'])->name('blog.store');
+Route::put('blogs/update/{blog}' , [BlogController::class , 'update'])->name('blog.update');
+Route::delete('blogs/delete/{blog}' , [BlogController::class , 'delete'])->name('blog.delete');
 
 require __DIR__.'/auth.php';

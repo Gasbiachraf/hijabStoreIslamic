@@ -71,7 +71,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
-<<<<<<< HEAD
 // ^^ Blogs :
 Route::get('/blogs' , [BlogController::class , 'index']) ;
 Route::post('blogs/store' , [BlogController::class , 'store'])->name('blog.store');
@@ -79,6 +78,3 @@ Route::put('blogs/update/{blog}' , [BlogController::class , 'update'])->name('bl
 Route::delete('blogs/delete/{blog}' , [BlogController::class , 'delete'])->name('blog.delete');
 
 require __DIR__.'/auth.php';
-=======
-require __DIR__ . '/auth.php';
->>>>>>> 30d37ad37192fb505abe128fbf897232fd072283

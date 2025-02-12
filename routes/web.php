@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/arrival', [ArrivalproductController::class, 'index'])->name('arrival.index');
     Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
     Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
-    
+
 
 
 
@@ -74,14 +74,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
-<<<<<<< HEAD
 // ^^ Blogs :
-Route::get('/blogs' , [BlogController::class , 'index']) ;
-Route::post('blogs/store' , [BlogController::class , 'store'])->name('blog.store');
-Route::put('blogs/update/{blog}' , [BlogController::class , 'update'])->name('blog.update');
-Route::delete('blogs/delete/{blog}' , [BlogController::class , 'delete'])->name('blog.delete');
 
-require __DIR__.'/auth.php';
-=======
+Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
+Route::post('/blogs', [BlogController::class, 'store'])->name('blog.store');
+
+// Route::get('/blogs', [BlogController::class, 'index']);
+Route::post('blogs/store', [BlogController::class, 'store'])->name('blog.store');
+Route::put('blogs/update/{blog}', [BlogController::class, 'update'])->name('blog.update');
+Route::get('/blogs/edit/{blog}', [BlogController::class, 'edit'])->name('blog.edit');
+
+Route::delete('blogs/delete/{blog}', [BlogController::class, 'destroy'])->name('blog.delete');
+
 require __DIR__ . '/auth.php';
->>>>>>> 30d37ad37192fb505abe128fbf897232fd072283

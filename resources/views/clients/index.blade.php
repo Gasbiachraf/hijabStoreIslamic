@@ -6,10 +6,11 @@
     </x-slot>
 
     <div class="flex flex-col items-center p-10">
-        <div class="w-full max-w-6xl bg-white shadow-md rounded-lg p-6">
+        <div class="w-full max-w-6xl bg-white shadow-md rounded-lg p-6 sm ">
             <!-- Add Client Button -->
             <div class="flex justify-end mb-6">
-                <a href="{{ route('clients.create') }}" class="inline-flex items-center bg-blue-500 text-white px-5 py-3 rounded-lg shadow-md transition hover:bg-blue-600">
+                <a href="{{ route('clients.create') }}"
+                    class="inline-flex items-center bg-blue-500 text-white px-5 py-3 rounded-lg shadow-md transition hover:bg-blue-600">
                     ➕ Add Client
                 </a>
             </div>
@@ -31,28 +32,30 @@
                     <tbody>
                         @foreach ($clients as $client)
                             <tr class="border-b even:bg-gray-100 hover:bg-gray-200 transition">
-                                <td class="px-6 py-4">{{ $client->id }}</td>
-                                <td class="px-6 py-4">{{ $client->name }}</td>
-                                <td class="px-6 py-4">{{ $client->GSM }}</td>
-                                <td class="px-6 py-4">{{ $client->adress }}</td>
-                                <td class="px-6 py-4">{{ $client->email }}</td>
-                                <td class="px-6 py-4">{{ $client->historique }}</td>
-                                <td class="px-6 py-4 flex items-center justify-center gap-x-4">
+                                <td class="px-6 py-4 text-nowrap">{{ $client->id }}</td>
+                                <td class="px-6 py-4 text-nowrap">{{ $client->name }}</td>
+                                <td class="px-6 py-4 text-nowrap ">{{ $client->GSM }}</td>
+                                <td class="px-6 py-4 text-nowrap">{{ $client->adress }}</td>
+                                <td class="px-6 py-4 text-nowrap">{{ $client->email }}</td>
+                                <td class="px-6 py-4 text-nowrap">{{ $client->historique }}</td>
+                                <td class="px-6 py-4 text-nowrap flex items-center justify-center gap-x-4">
                                     <!-- Edit Button -->
-                                    <a href="{{ route('clients.edit', $client->id) }}" 
+                                    <a href="{{ route('clients.edit', $client->id) }}"
                                         class="bg-blue-500 px-4 py-2 text-white rounded-lg shadow-md transition hover:bg-blue-600">
                                         ✏️ Edit
                                     </a>
                                     <!-- Delete Button -->
-                                    <form action="{{ route('clients.delete', $client->id) }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to delete this client?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                            class="bg-red-600 px-4 py-2 text-white rounded-lg shadow-md transition hover:bg-red-700">
-                                            🗑️ Delete
-                                        </button>
-                                    </form>
+                                    @if (auth()->user()->role === 'admin')
+                                        <form action="{{ route('clients.delete', $client->id) }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this client?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-red-600 px-4 py-2 text-white rounded-lg shadow-md transition hover:bg-red-700">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

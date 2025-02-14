@@ -5,289 +5,173 @@
         </h2>
     </x-slot>
     <div x-data='{showModal: false}' class="container mx-auto my-10 p-4">
-
-        <h1 class="text-3xl font-bold mb-6">Cart</h1>
-
+        <h1 class="text-3xl font-bold mb-6 text-center lg:text-left">Cart</h1>
+    
         <div class="flex flex-col lg:flex-row gap-6">
-
             <div class="flex-1 bg-white rounded-lg shadow-md p-4">
-                <table class="w-full">
-                    <thead>
-                        <tr class="text-left border-b">
-                            <th class="pb-3">PRODUCTS</th>
-                            <th class="pb-3">NAME</th>
-                            <th class="pb-3">COLOR</th>
-                            <th class="pb-3">SIZE</th>
-                            <th class="pb-3">PRICE</th>
-                            <th class="pb-3">QUANTITY</th>
-                            <th class="pb-3">TOTAL</th>
-                            <th class="pb-3">SUPRIMER</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($selectedProducts as $product)
-                            @foreach ($product->inventories as $inventory)
-                                @foreach ($inventory->variants as $variant)
-                                    @foreach ($variant->sizes as $size)
-                                        <tr class="border-b">
-                                            <td>
-                                                <img src="{{ asset('storage/images/' . $variant->images->filter(fn($element) => $element->path)->pluck('path')->first()) }}"
-                                                    width="60px" alt="Product Image">
-                                            </td>
-                                            <td class="py-4">{{ $product->name->ar }}</td>
-                                            <td class="py-4">
-                                                <div class="w-4 h-4 rounded-full border border-gray-300"
-                                                    style="background-color: {{ $variant->color }};"></div>
-                                            </td>
-                                            <td class="py-4">{{ $size->size }}</td>
-                                            <td class="py-4">{{ $inventory->postPrice }}£</td>
-                                            <td class="py-4 flex items-center">
-                                                <button class="px-2 py-1 border border-gray-400 rounded decrement-btn"
-                                                    data-variant-id="{{ $variant->id }}"
-                                                    data-size-id="{{ $size->id }}">-</button>
-                                                <span class="mx-2 quantity"
-                                                    id="quantity-{{ $variant->id }}-{{ $size->id }}">
-                                                    1
-                                                </span>
-                                                <button class="px-2 py-1 border border-gray-400 rounded increment-btn"
-                                                    data-variant-id="{{ $variant->id }}"
-                                                    data-size-id="{{ $size->id }}">+</button>
-                                            </td>
-
-                                            <td class="py-4" id="subtotal-{{ $variant->id }}-{{ $size->id }}">
-                                                {{ $inventory->postPrice }}£
-                                            </td>
-                                            <td class="py-4">
-                                                <form action="{{ route('cart.remove') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <input type="hidden" name="color" value="{{ $variant->color }}">
-                                                    <input type="hidden" name="size" value="{{ $size->size }}">
-                                                    <button type="submit" class="text-red-500">🗑</button>
-                                                </form>
-                                                
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endforeach
-                            @endforeach
-                        @endforeach
-                    </tbody>
-
-
-
-
-                </table>
-                <div class="text-right mt-4">
-                    <span class="font-semibold">Items subtotal: </span>
-                    <span id="items-subtotal">691</span>
-                </div>
-                <div class="mt-4 flex justify-center items-center  ">
-                    <button class=" w-[30%] bg-blue-600 text-white font-bold py-3 rounded"
-                        x-on:click.prevent="$dispatch('open-modal','command-modal')">Proceed to Checkout</button>
-                </div>
-            </div>
-
-
-            {{-- <div class="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-lg font-bold mb-4">Summary</h2>
-                <div class="flex justify-between mb-2">
-                    <span>Items subtotal:</span>
-                    <span id="items-subtotal2">0.00£</span>
-                </div>
-                <div class="flex items-center justify-between mb-2">
-                    <span>Negotiation:</span>
-                    <input type="text" id="negotiation" class="rounded-lg border-gray-300 w-24 text-right">
-                </div>
-                <div class="flex justify-between mb-2">
-                    <span>Subtotal:</span>
-                    <span id="subtotal">0.00£</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                    <span>Shipping Cost:</span>
-                    <span id="shipping-cost">0.00£</span>
-                </div>
-                <div class="border-t my-2"></div>
-                <div class="flex justify-between font-bold">
-                    <span>Total:</span>
-                    <span id="total">0.00£</span>
-                </div>
-                <div class="mt-4">
-                    <label for="payment-method" class="block mb-2">Payment Method:</label>
-                    <select id="payment-method" class="w-full border border-gray-300 rounded p-2">
-                        <option value="not-delivered">Not Delivered</option>
-                        <option value="pending">Pending</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="in-present">In Present</option>
-                    </select>
-                </div>
-                
-            </div> --}}
-
-
-
-        </div>
-        <div class="flex gap-2 items-center">
-
-            {{-- <button class="p-4 bg-green-500 " >
-                Open modal
-            </button> --}}
-            <x-modal name="command-modal" :show="$errors->userDeletion->isNotEmpty()">
-                <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}" class="space-y-6">
-                    @csrf
-
-                    <!-- Client Section -->
-                    <div class="mb-6">
-                        <label for="client" class="block text-lg font-semibold text-gray-800 mb-2">Client</label>
-                        <div class="flex items-center space-x-4">
-                            <select id="client" name="client_id"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                                <option value="">Select a client</option>
-                                @foreach ($clients as $client)
-                                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                @endforeach
-                            </select>
-                            <button id="add-client-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md"
-                                type="button">
-                                Add New
-                            </button>
-                        </div>
-
-                        <div id="new-client-form" class="mt-4 hidden space-y-4">
-                            <div class="mb-2">
-                                <label for="client-name" class="block text-sm font-medium text-gray-700">Name</label>
-                                <input type="text" id="client-name" name="new_client_name"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            </div>
-                            <div class="mb-2">
-                                <label for="client-phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                                <input type="text" id="client-phone" name="new_client_phone"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            </div>
-                            <div class="mb-2">
-                                <label for="client-address"
-                                    class="block text-sm font-medium text-gray-700">Address</label>
-                                <input type="text" id="client-address" name="new_client_address"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Status Section -->
-                    <div class="mb-6">
-                        <label for="status" class="block text-lg font-semibold text-gray-800 mb-2">Status</label>
-                        <select id="status" name="status"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            <option value="sell">Sell</option>
-                            <option value="rent">Rent</option>
-                        </select>
-                    </div>
-
-                    <!-- Delivery Section -->
-                    <div class="mb-6">
-                        <label for="livraison" class="block text-lg font-semibold text-gray-800 mb-2">Delivery</label>
-                        <select id="livraison" name="livraison"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
-                            <option value="livraison">livraison</option>
-                            <option value="in_present">in present</option>
-                        </select>
-                    </div>
-
-                    <!-- Products Section -->
-                    <div id="products-section" class="mb-6">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Products</h3>
-                        <table class="w-full border border-gray-200 bg-white rounded-lg shadow-md">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-800 text-sm font-semibold">
-                                    <th class="py-2">Image</th>
-                                    <th class="py-2">Name</th>
-                                    <th class="py-2">Color</th>
-                                    <th class="py-2">Size</th>
-                                    <th class="py-2">Price</th>
-                                    <th class="py-2">Quantity</th>
-                                    <th class="py-2">Subtotal</th>
-                                    <th class="py-2">Sell price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($selectedProducts as $product)
-                                    @foreach ($product->inventories as $inventory)
-                                        @foreach ($inventory->variants as $variant)
-                                            @foreach ($variant->sizes as $size)
-                                                <tr class="border-b">
-                                                    <!-- Product Image -->
-                                                    <td class="py-2 text-center">
-                                                        <img src="{{ asset('storage/images/' . $variant->images->filter(fn($image) => $image->path)->pluck('path')->first()) }}"
-                                                            width="60px" alt="Product Image">
-                                                    </td>
-                                                    <!-- Product Name -->
-                                                    <td class="py-4">{{ $product->name->ar }}</td>
-                                                    <!-- Product Color -->
-                                                    <td class="py-4">
-                                                        <div class="w-4 h-4 rounded-full border border-gray-300"
-                                                            style="background-color: {{ $variant->color }};"></div>
-                                                    </td>
-                                                    <!-- Product Size -->
-                                                    <td class="py-4">{{ $size->size }}</td>
-                                                    <!-- Product Price -->
-                                                    <td class="py-4">{{ $inventory->postPrice }}£</td>
-                                                    <!-- Quantity Selector -->
-                                                    <td class="py-4 " data-variant-id="{{ $variant->id }}"
-                                                        data-size-id="{{ $size->id }}">
-                                                        <span
-                                                            class="mx-2 quantity flex items-center justify-center text-center "
-                                                            id="modal-quantity2-{{ $variant->id }}-{{ $size->id }}">1</span>
-                                                    </td>
-
-                                                    <!-- Subtotal -->
-                                                    <td class="py-4"
-                                                        id="subtotal2-{{ $variant->id }}-{{ $size->id }}">
-                                                        {{ $inventory->postPrice }}£
-                                                    </td>
-                                                    <!-- Delete Button -->
-                                                    <td class="py-4 text-center">
-                                                        <input type="text" class="rounded-lg"
-                                                            name="products[{{ $variant->id }}_{{ $size->id }}][sale_price]">
-                                                    </td>
-                                                    <!-- Hidden Inputs for Form Submission -->
-                                                    <input type="hidden"
-                                                        id="input-quantity2-{{ $variant->id }}-{{ $size->id }}"
-                                                        name="products[{{ $variant->id }}_{{ $size->id }}][quantity]"
-                                                        value="1">
-                                                    <input type="hidden"
-                                                        name="products[{{ $variant->id }}_{{ $size->id }}][variant_id]"
-                                                        value="{{ $variant->id }}">
-                                                    {{-- <input type="hidden" name="products[{{ $variant->id }}_{{ $size->id }}][sale_price]" value="{{ $inventory->postPrice }}"> --}}
-                                                    <input id="" type="hidden"
-                                                        name="products[{{ $variant->id }}_{{ $size->id }}][size]"
-                                                        value="{{ $size->size }}">
-                                                    <input type="hidden"
-                                                        name="products[{{ $variant->id }}_{{ $size->id }}][color]"
-                                                        value="{{ $variant->color }}">
-                                                </tr>
-                                            @endforeach
+                <!-- Responsive Table Wrapper -->
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[600px]">
+                        <thead>
+                            <tr class="text-left border-b text-sm md:text-base">
+                                <th class="pb-3">PRODUCTS</th>
+                                <th class="pb-3">NAME</th>
+                                <th class="pb-3">COLOR</th>
+                                <th class="pb-3">SIZE</th>
+                                <th class="pb-3">PRICE</th>
+                                <th class="pb-3">QUANTITY</th>
+                                <th class="pb-3">TOTAL</th>
+                                <th class="pb-3">DELETE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($selectedProducts as $product)
+                                @foreach ($product->inventories as $inventory)
+                                    @foreach ($inventory->variants as $variant)
+                                        @foreach ($variant->sizes as $size)
+                                            <tr class="border-b text-sm md:text-base">
+                                                <td>
+                                                    <img src="{{ asset('storage/images/' . $variant->images->filter(fn($element) => $element->path)->pluck('path')->first()) }}" 
+                                                        class="w-10 h-10 md:w-16 md:h-16 object-cover rounded" 
+                                                        alt="Product Image">
+                                                </td>
+                                                <td class="py-2">{{ $product->name->ar }}</td>
+                                                <td class="py-2">
+                                                    <div class="w-4 h-4 rounded-full border border-gray-300" 
+                                                        style="background-color: {{ $variant->color }};">
+                                                    </div>
+                                                </td>
+                                                <td class="py-2">{{ $size->size }}</td>
+                                                <td class="py-2">{{ $inventory->postPrice }}£</td>
+                                                <td class="py-2 flex items-center space-x-2">
+                                                    <button class="px-2 py-1 border border-gray-400 rounded decrement-btn text-xs md:text-sm"
+                                                        data-variant-id="{{ $variant->id }}" 
+                                                        data-size-id="{{ $size->id }}">-</button>
+                                                    <span class="quantity text-xs md:text-sm" id="quantity-{{ $variant->id }}-{{ $size->id }}">1</span>
+                                                    <button class="px-2 py-1 border border-gray-400 rounded increment-btn text-xs md:text-sm"
+                                                        data-variant-id="{{ $variant->id }}" 
+                                                        data-size-id="{{ $size->id }}">+</button>
+                                                </td>
+                                                <td class="py-2" id="subtotal-{{ $variant->id }}-{{ $size->id }}">
+                                                    {{ $inventory->postPrice }}£
+                                                </td>
+                                                <td class="py-2 text-center">
+                                                    <form action="{{ route('cart.remove') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                        <input type="hidden" name="color" value="{{ $variant->color }}">
+                                                        <input type="hidden" name="size" value="{{ $size->size }}">
+                                                        <button type="submit" class="text-red-500 text-lg md:text-xl">🗑</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     @endforeach
                                 @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-
-                    <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit"
-                            class="bg-green-600 text-white px-8 py-3 rounded-lg shadow-lg font-bold text-lg hover:bg-green-700 transition duration-300">Submit</button>
-                    </div>
-                </form>
-            </x-modal>
-
-
-
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+    
+                <!-- Subtotal -->
+                <div class="text-right mt-4 text-sm md:text-base">
+                    <span class="font-semibold">Items subtotal: </span>
+                    <span id="items-subtotal">691</span>
+                </div>
+    
+                <!-- Checkout Button -->
+                <div class="mt-4 flex justify-center">
+                    <button class="w-full md:w-1/3 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm md:text-lg"
+                        x-on:click.prevent="$dispatch('open-modal','command-modal')">Proceed to Checkout</button>
+                </div>
+            </div>
         </div>
-
+    
+        <!-- Modal -->
+        <x-modal name="command-modal" :show="$errors->userDeletion->isNotEmpty()">
+            <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}" class="space-y-6 p-4">
+                @csrf
+    
+                <!-- Client Section -->
+                <div>
+                    <label for="client" class="block font-semibold text-gray-800">Client</label>
+                    <div class="flex items-center space-x-4">
+                        <select id="client" name="client_id" class="w-full border rounded-lg px-4 py-2 text-gray-700">
+                            <option value="">Select a client</option>
+                            @foreach ($clients as $client)
+                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                            @endforeach
+                        </select>
+                        <button id="add-client-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md" type="button">
+                            Add New
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Status -->
+                <div>
+                    <label for="status" class="block font-semibold text-gray-800">Status</label>
+                    <select id="status" name="status" class="w-full border rounded-lg px-4 py-2 text-gray-700">
+                        <option value="sell">Sell</option>
+                        <option value="rent">Rent</option>
+                    </select>
+                </div>
+    
+                <!-- Delivery -->
+                <div>
+                    <label for="livraison" class="block font-semibold text-gray-800">Delivery</label>
+                    <select id="livraison" name="livraison" class="w-full border rounded-lg px-4 py-2 text-gray-700">
+                        <option value="livraison">Livraison</option>
+                        <option value="in_present">In Present</option>
+                    </select>
+                </div>
+    
+                <!-- Products Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[600px] border bg-white rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-800 text-sm">
+                                <th class="py-2">Image</th>
+                                <th class="py-2">Name</th>
+                                <th class="py-2">Color</th>
+                                <th class="py-2">Size</th>
+                                <th class="py-2">Price</th>
+                                <th class="py-2">Quantity</th>
+                                <th class="py-2">Subtotal</th>
+                                <th class="py-2">Sell Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($selectedProducts as $product)
+                                @foreach ($product->inventories as $inventory)
+                                    @foreach ($inventory->variants as $variant)
+                                        @foreach ($variant->sizes as $size)
+                                            <tr class="border-b text-sm">
+                                                <td><img src="{{ asset('storage/images/' . $variant->images->filter(fn($image) => $image->path)->pluck('path')->first()) }}" class="w-10 h-10 object-cover rounded"></td>
+                                                <td>{{ $product->name->ar }}</td>
+                                                <td><div class="w-4 h-4 rounded-full border border-gray-300" style="background-color: {{ $variant->color }};"></div></td>
+                                                <td>{{ $size->size }}</td>
+                                                <td>{{ $inventory->postPrice }}£</td>
+                                                <td class="text-center">1</td>
+                                                <td>{{ $inventory->postPrice }}£</td>
+                                                <td><input type="text" class="w-16 border rounded-lg" name="products[{{ $variant->id }}_{{ $size->id }}][sale_price]"></td>
+                                            </tr>
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+    
+                <!-- Submit -->
+                <div class="text-center">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md font-bold">Submit</button>
+                </div>
+            </form>
+        </x-modal>
     </div>
-    </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

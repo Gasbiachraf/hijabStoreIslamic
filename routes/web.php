@@ -14,6 +14,8 @@ use App\Models\CommandVariant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
+
     return view('auth.login');
 });
 
@@ -22,17 +24,29 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
+Route::middleware(['auth', 'role:admin,intern'])->group(function () { 
+
+
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy'])->name('clients.delete');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
+    Route::delete('/delete/variant/{id}', [VariantController::class, 'destroy'])->name('variant.delete');
+    Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
+    Route::delete('blogs/delete/{blog}', [BlogController::class, 'destroy'])->name('blog.delete');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     //?Clients
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
     Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
     Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     Route::put('/clients/update/{id}', [ClientController::class, 'update'])->name('clients.update');
-    Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy'])->name('clients.delete');
     //*Products
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     //!Commande
@@ -49,42 +63,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
     Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
 
-
-
-
-
-
-
-
-
-
-
-
-    Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
     Route::put('/update/product/{product}', [VariantController::class, 'update'])->name('product.update');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
     Route::post('/add_product', [VariantController::class, 'store'])->name('product.store');
     Route::get('/addproduct', [VariantController::class, 'index'])->name('product.index');
-    Route::delete('/delete/variant/{id}', [VariantController::class, 'destroy'])->name('variant.delete');
     Route::get('/restock/variant/{id}', [VariantController::class, 'show'])->name('variant.show');
     Route::patch('/restock/variant/{product}', [VariantController::class, 'restock'])->name('variant.restock');
-
     // images 
     Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
-    Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
 });
 
 // ^^ Blogs :
-
 Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
 Route::post('/blogs', [BlogController::class, 'store'])->name('blog.store');
-
 // Route::get('/blogs', [BlogController::class, 'index']);
 Route::post('blogs/store', [BlogController::class, 'store'])->name('blog.store');
 Route::put('blogs/update/{blog}', [BlogController::class, 'update'])->name('blog.update');
 Route::get('/blogs/edit/{blog}', [BlogController::class, 'edit'])->name('blog.edit');
 
-Route::delete('blogs/delete/{blog}', [BlogController::class, 'destroy'])->name('blog.delete');
 
 require __DIR__ . '/auth.php';

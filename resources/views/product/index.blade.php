@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="flex flex-col justify-center items-center p-10">
+    <div class="flex flex-col justify-center items-center p-1">
         <div class="w-[90%] p-5 bg-white shadow-md rounded-lg">
             @if (count($inventories) < 1)
                 <div class="flex flex-col items-center">
@@ -19,7 +19,7 @@
                     </p>
                 </div>
             @else
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-4 gap-2">
                     <h3 class="text-lg font-bold">Products</h3>
                     <a href="{{ route('cart.index') }}"
                         class="bg-purple-500 text-white px-4 py-2 rounded-lg shadow hover:bg-purple-600">

@@ -4,7 +4,7 @@
             {{ __('Edit Command') }}
         </h2>
     </x-slot>
-
+{{-- <h1></h1> --}}
     <div class="max-w-4xl mx-auto mt-10">
         <form action="{{ route('commandVariants.update', $commandVariant->id) }}" method="POST"
             class="bg-[#e9e8e4] shadow-md rounded px-8 pt-6 pb-8 mb-4">

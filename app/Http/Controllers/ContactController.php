@@ -10,6 +10,12 @@ class ContactController extends Controller
     //
     public function store(Request $request)
     {
+
+        $token = $request->header('Token');
+
+        if ($token !== 'achrafshouldgotokenitra') {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         // Assuming you want to log or process the data:
         // Log the data or save to the database (optional)
         \Log::info('Contact Form Data:', $request->all());

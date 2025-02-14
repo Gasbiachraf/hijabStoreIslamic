@@ -74,11 +74,9 @@ class CommandVariantController extends Controller
         return redirect()->route('command.index')->with('success', 'Command updated successfully!');
     }
 
-
     public function getSizes($variantId)
     {
         $sizes = Size::where('variant_id', $variantId)->get(['size']);
-
         return response()->json(['sizes' => $sizes]);
     }
 

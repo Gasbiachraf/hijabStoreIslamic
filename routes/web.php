@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
 use App\Http\Controllers\CommandVariantController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogController;
@@ -19,9 +20,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware(['auth', 'role:admin,intern'])->group(function () { 
@@ -39,6 +37,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     //?Clients
@@ -63,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
     Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
 
+    Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
+
     Route::put('/update/product/{product}', [VariantController::class, 'update'])->name('product.update');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
     Route::post('/add_product', [VariantController::class, 'store'])->name('product.store');
@@ -84,3 +85,4 @@ Route::get('/blogs/edit/{blog}', [BlogController::class, 'edit'])->name('blog.ed
 
 
 require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

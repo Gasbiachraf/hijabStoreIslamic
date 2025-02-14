@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class productController extends Controller
 {
-    public function products() {
+    public function index() {
         $products = Product::all();
         return new ProductCollection($products);
     }

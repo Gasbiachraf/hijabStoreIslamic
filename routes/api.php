@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\productController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Http\Request;
@@ -12,3 +13,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [productController::class, 'products']);
 //Contact 
 Route::post('/contact', [ContactController::class, 'store']);
+Route::get('/products', [productController::class, 'index']);
+Route::get('/blogs', [BlogController::class, 'index']);

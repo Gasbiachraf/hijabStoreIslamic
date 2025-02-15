@@ -10,7 +10,8 @@ use App\Models\Size;
 use App\Models\Subcategory;
 use App\Models\Variant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class VariantController extends Controller
 {
@@ -86,11 +87,19 @@ class VariantController extends Controller
             ]);
             if ($images) {
                 foreach ($images[$color] as $key => $img) {
+                    $fileSize = $img->getSize();
                     $imageName = time() . '_' . $img->getClientOriginalName();
+                    $path = public_path('storage/images') . "/" . $imageName;
+                    if ($fileSize >= 1024 * 1024) {
+                        $manager = new ImageManager(new Driver());
+                        $image = $manager->read($img);
+                        $image->toJpeg(50)->save($path);
+                    } else {
+                        $img->storeAs('images', $imageName, 'public');
+                    }
                     $variant->images()->create([
                         'path' => $imageName
                     ]);
-                    $img->storeAs('images', $imageName, 'public');
                 }
             }
             foreach ($sizes as $sizeKey => $size) {
@@ -147,7 +156,6 @@ class VariantController extends Controller
             'color' => 'array',
             'quantity' => 'array'
         ]);
-        // dd('update');
         $category = null;
         $subCategory = null;
 
@@ -172,10 +180,6 @@ class VariantController extends Controller
         $sizes = $request->input("size");
         $quantities = $request->quantity;
         $images = $request->file('variant_images');
-        // dd($product);
-        // dd($colors);
-        // $inventories = Inventory::where('product_id', $product->id)->get();
-        // dd($inventories);
         foreach ($product->inventories as $inventory) {
             $inventory->update([
                 'product_id' => $product->id,
@@ -193,10 +197,18 @@ class VariantController extends Controller
                     if ($images) {
                         foreach ($images[$color] as $key => $img) {
                             $imageName = time() . '_' . $img->getClientOriginalName();
+                            $fileSize = $img->getSize();
+                            $path = public_path('storage/images') . "/" . $imageName;
+                            if ($fileSize >= 1024 * 1024) {
+                                $manager = new ImageManager(new Driver());
+                                $image = $manager->read($img);
+                                $image->toJpeg(50)->save($path);
+                            } else {
+                                $img->storeAs('images', $imageName, 'public');
+                            }
                             $variant->images()->create([
                                 'path' => $imageName
                             ]);
-                            $img->storeAs('images', $imageName, 'public');
                         }
                     }
                     foreach ($sizes as $sizeKey => $size) {
@@ -219,8 +231,6 @@ class VariantController extends Controller
 
     public function restock(Request $request, Product $product)
     {
-        // $colors = [];
-        // dd($request);
         foreach ($product->inventories as $key => $inventory) {
             foreach ($inventory->variants as $ke => $variant) {
                 $col = $variant->color;

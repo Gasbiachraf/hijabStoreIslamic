@@ -38,21 +38,21 @@
                     {{-- info --}}
                     <div id="Info" x-show="steps[currentStep] === 'Info'">
                         {{-- category && sub category --}}
-                        <div class="w-full bg--500 flex gap-5 items-center">
-                            <div class="w-1/2 flex flex-col gap-3 py-4">
-                                <div class="flex gap-2 items-center justify-between">
+                        <div class="w-full bg--500 flex lg:flex-row flex-col gap-5 items-center">
+                            <div class="lg:w-1/2 w-full flex flex-col gap-3 py-4">
+                                <div class="flex w-full gap-2 items-center justify-between">
                                     <h1 class="font-medium">Category</h1>
                                     <button type="button" x-on:click.prevent="$dispatch('open-modal', 'add-category')"
                                         class="bg-alpha/50 px-4 rounded-lg py-2 cursor-pointer">+ Add New
                                         Category</button>
                                     <x-modal name="add-category" :show="$errors->userDeletion->isNotEmpty()">
-                                        <div class="flex flex-col gap-4">
+                                        <div class="flex flex-col  gap-4">
                                             <label for="">Category Name</label>
                                             <input placeholder="name" x-ref='category_name' type="text"
                                                 name="category_name">
                                             <button type="button"
                                                 x-on:click.prevent='category=$refs.category_name.value; $dispatch("close-modal", "add-category")'
-                                                class="px-3 py-2 bg-gamma rounded text-white w-fit">Submit</button>
+                                                class="px-3 py-2  bg-gamma rounded text-white w-fit">Submit</button>
                                         </div>
                                     </x-modal>
                                 </div>
@@ -66,15 +66,15 @@
                                     </template>
                                 </select>
                             </div>
-                            <div class="w-1/2 flex flex-col gap-3 py-4">
-                                <div class="flex gap-2 items-center justify-between">
+                            <div class="lg:w-1/2 w-full flex flex-col gap-3 py-4">
+                                <div class="flex w-full gap-2 items-center justify-between">
                                     <h1>Sub Category</h1>
                                     <button type="button"
                                         x-on:click.prevent="$dispatch('open-modal', 'add-subcategory')"
                                         class="bg-alpha/50 px-4 rounded-lg py-2 cursor-pointer">+ Add New Sub
                                         Category</button>
                                     <x-modal name="add-subcategory" :show="$errors->userDeletion->isNotEmpty()">
-                                        <div class="flex flex-col gap-4 ">
+                                        <div class="flex  flex-col gap-4 ">
                                             <label for="">Sub Category Name</label>
                                             {{-- <input type="hidden" value=""> --}}
                                             <input placeholder="name" x-ref='sub_category_name' type="text"
@@ -102,7 +102,7 @@
                             <div class="flex items-center gap-3 rounded-md bg-beta px-3 py-2">
                                 <template x-for='language in languages'>
                                     <span x-bind:class="currentPage == language ? 'bg-gray-50/80' : 'bg-transparent'"
-                                        class=" w-[5vw] text-center rounded py-2 font-medium cursor-pointer"
+                                        class="px-2 text-center rounded py-2 font-medium cursor-pointer"
                                         x-on:click='currentPage = language'
                                         x-text="language === 'en' ? 'English' : language === 'fr' ? 'Français' : 'العربية'"></span>
                                 </template>
@@ -249,18 +249,18 @@
                         <h1 class="text-xl font-medium">
                             Pricing
                         </h1>
-                        <div class="flex gap-5 justify-between items-center">
-                            <div class="flex flex-col gap-3">
+                        <div class="flex lg:flex-row flex-col w-full gap-5 justify-between items-center">
+                            <div class="flex flex-col w-full gap-3">
                                 <label for="">Purchase price</label>
                                 <input required class="input-number" class="bg-gray-50/80" type="number"
                                     name="prePrice" placeholder="Purchase">
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col w-full gap-3">
                                 <label for="">Sale Price</label>
                                 <input required class="input-number" class="bg-gray-50/80" type="number"
                                     name="postPrice" placeholder="Sale">
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col w-full gap-3">
                                 <label for="">Old Price</label>
                                 <input required class="input-number" class="bg-gray-50/80" type="number"
                                     name="ex_price" placeholder="Old">

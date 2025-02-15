@@ -53,8 +53,9 @@ class BlogController extends Controller
         $request->validate([
             "title" => "required",
             "description" => "required",
-            "image" => "required|mimes:png,jpg|max:2048"
+            "image" => "mimes:png,jpg"
         ]);
+        // dd($request);
 
         if ($request->hasFile('image')) {
 
@@ -65,11 +66,10 @@ class BlogController extends Controller
             $imagePath = $request->file('image')->store('blog_images', 'public');
             $blog->image = basename($imagePath);
         }
-
-
-        $blog->title = $request->title;
-        $blog->description = $request->description;
-        $blog->save();
+        $blog->update([
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
 
         return redirect()->route('blog.index')->with('success', 'Blog updated successfully!');
     }
@@ -81,6 +81,4 @@ class BlogController extends Controller
         $blog->delete();
         return back();
     }
-
-
 }

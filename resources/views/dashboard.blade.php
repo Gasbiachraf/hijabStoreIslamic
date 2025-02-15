@@ -5,25 +5,24 @@
         </h2>
     </x-slot>
     <div class="py-12">
-
         <div class="flex gap-3 w-full rounded-lg">
             <div class="w-full flex flex-col gap-3">
                 {{-- cards --}}
-                <div class="flex gap-3">
-                    <div class="bg-white p-3 rounded-lg border w-1/3 aspect-video">
+                <div class="flex lg:flex-row flex-col gap-3">
+                    <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <div class="flex justify-between">
                             <h3>Total Earning</h3>
                             <h3>last 7 days</h3>
                         </div>
                         <p class="text-3xl font-bold">{{ $total7daysEarnings }} Dhs</p>
                     </div>
-                    <div class="bg-white p-3 rounded-lg border w-1/3 aspect-video">
+                    <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <div class="flex justify-between">
                             <h3>Top 5 Categories</h3>
                         </div>
                         <p id="pieChart" class=""></p>
                     </div>
-                    <div class="bg-white p-3 rounded-lg border w-1/3 aspect-video">
+                    <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <div class="flex justify-between">
                             <h3>Last 30 Days Orders</h3>
                         </div>
@@ -31,7 +30,7 @@
                     </div>
                     {{-- top selling products --}}
 
-                    <div class="bg-white p-3 rounded-lg border w-1/3 aspect-video">
+                    <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <h2 class="pb-4">Top Selling Products</h2>
                         @foreach ($products->take(3) as $k => $prd)
                                 @php
@@ -68,9 +67,9 @@
 
         </div>
         {{-- orders cards --}}
-        <div class="flex gap-3 py-3">
-            <div class="flex items-center gap-3 bg-white w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 w-[3vw] flex justify-center items-center aspect-square rounded-full">
+        <div class="flex lg:flex-row flex-col gap-3 py-3">
+            <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
+                <div class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -82,8 +81,8 @@
                     <p>Total orders</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 bg-white w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 w-[3vw] flex justify-center items-center aspect-square rounded-full">
+            <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
+                <div class="bg-green-400 lg:w-[3vw]  w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg class="size-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd"
@@ -96,8 +95,8 @@
                     <p>Orders made at the store </p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 bg-white w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 w-[3vw] flex justify-center items-center aspect-square rounded-full">
+            <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
+                <div class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -111,7 +110,7 @@
             </div>
         </div>
         {{-- orders table --}}
-        <div class="">
+        <div class="w-full overflow-x-auto">
             <table class="w-full text-sm text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 rounded-lg">
                     <tr class="">
@@ -159,9 +158,10 @@
                 </tbody>
             </table>
         </div>
-        <div class="py-3 grid grid-cols-4 gap-3 flex-wrap">
+        {{-- total cards --}}
+        <div class="py-3 grid lg:grid-cols-4 gap-3 flex-wrap">
             <div class=" bg-white rounded-lg p-3 flex gap-3 items-center">
-                <div class="w-[3vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
+                <div class="lg:w-[3vw] w-[8vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -174,7 +174,7 @@
                 </div>
             </div>
             <div class=" bg-white rounded-lg p-3 flex gap-3 items-center">
-                <div class="w-[3vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
+                <div class="lg:w-[3vw] w-[8vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -187,7 +187,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg p-3 flex gap-3 items-center">
-                <div class="w-[3vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
+                <div class="lg:w-[3vw] w-[8vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -200,7 +200,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg p-3 flex gap-3 items-center">
-                <div class="w-[3vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
+                <div class="lg:w-[3vw] w-[8vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -213,7 +213,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg p-3 flex gap-3 items-center">
-                <div class="w-[3vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
+                <div class="lg:w-[3vw] w-[8vw] aspect-square rounded-full bg-red-200 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"

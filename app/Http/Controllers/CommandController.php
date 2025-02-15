@@ -57,6 +57,8 @@ class CommandController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+
         $validated = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
             'new_client_name' => 'nullable',

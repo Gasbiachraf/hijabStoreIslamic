@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VariantController;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\CommandVariant;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +23,12 @@ Route::get('/', function () {
 
 
 
-Route::middleware(['auth', 'role:admin,intern'])->group(function () { 
+// Route::middleware(['auth', 'role:admin,intern'])->group(function () { 
 
 
-});
+// });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', RoleMiddleware::class])->group(function () {
     Route::delete('/clients/delete/{id}', [ClientController::class, 'destroy'])->name('clients.delete');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
@@ -61,9 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/arrival', [ArrivalproductController::class, 'index'])->name('arrival.index');
     Route::get('/arrival/{id}/edit', [ArrivalProductController::class, 'edit'])->name('arrival.edit');
     Route::patch('/arrival/{id}', [ArrivalProductController::class, 'update'])->name('arrival.update');
-
     Route::delete('/delete/product/{id}', [ProductController::class, 'destroy'])->name('product.delete');
-
     Route::put('/update/product/{product}', [VariantController::class, 'update'])->name('product.update');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
     Route::post('/add_product', [VariantController::class, 'store'])->name('product.store');
@@ -73,7 +72,6 @@ Route::middleware('auth')->group(function () {
     // images 
     Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
 });
-
 // ^^ Blogs :
 Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
@@ -82,7 +80,5 @@ Route::post('/blogs', [BlogController::class, 'store'])->name('blog.store');
 Route::post('blogs/store', [BlogController::class, 'store'])->name('blog.store');
 Route::put('blogs/update/{blog}', [BlogController::class, 'update'])->name('blog.update');
 Route::get('/blogs/edit/{blog}', [BlogController::class, 'edit'])->name('blog.edit');
-
-
 require __DIR__ . '/auth.php';
 require __DIR__.'/auth.php';

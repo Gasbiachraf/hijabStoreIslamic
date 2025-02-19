@@ -32,37 +32,45 @@
                                         @foreach ($variant->sizes as $size)
                                             <tr class="border-b text-sm md:text-base">
                                                 <td>
-                                                    <img src="{{ asset('storage/images/' . $variant->images->filter(fn($element) => $element->path)->pluck('path')->first()) }}" 
-                                                        class="w-10 h-10 md:w-16 md:h-16 object-cover rounded" 
+                                                    <img src="{{ asset('storage/images/' . $variant->images->filter(fn($element) => $element->path)->pluck('path')->first()) }}"
+                                                        class="w-10 h-10 md:w-16 md:h-16 object-cover rounded"
                                                         alt="Product Image">
                                                 </td>
                                                 <td class="py-2">{{ $product->name->ar }}</td>
                                                 <td class="py-2">
-                                                    <div class="w-4 h-4 rounded-full border border-gray-300" 
+                                                    <div class="w-4 h-4 rounded-full border border-gray-300"
                                                         style="background-color: {{ $variant->color }};">
                                                     </div>
                                                 </td>
                                                 <td class="py-2">{{ $size->size }}</td>
                                                 <td class="py-2">{{ $inventory->postPrice }}£</td>
                                                 <td class="py-2 flex items-center space-x-2">
-                                                    <button class="px-2 py-1 border border-gray-400 rounded decrement-btn text-xs md:text-sm"
-                                                        data-variant-id="{{ $variant->id }}" 
+                                                    <button
+                                                        class="px-2 py-1 border border-gray-400 rounded decrement-btn text-xs md:text-sm"
+                                                        data-variant-id="{{ $variant->id }}"
                                                         data-size-id="{{ $size->id }}">-</button>
-                                                    <span class="quantity text-xs md:text-sm" id="quantity-{{ $variant->id }}-{{ $size->id }}">1</span>
-                                                    <button class="px-2 py-1 border border-gray-400 rounded increment-btn text-xs md:text-sm"
-                                                        data-variant-id="{{ $variant->id }}" 
+                                                    <span class="quantity text-xs md:text-sm"
+                                                        id="quantity-{{ $variant->id }}-{{ $size->id }}">1</span>
+                                                    <button
+                                                        class="px-2 py-1 border border-gray-400 rounded increment-btn text-xs md:text-sm"
+                                                        data-variant-id="{{ $variant->id }}"
                                                         data-size-id="{{ $size->id }}">+</button>
                                                 </td>
-                                                <td class="py-2" id="subtotal-{{ $variant->id }}-{{ $size->id }}">
+                                                <td class="py-2"
+                                                    id="subtotal-{{ $variant->id }}-{{ $size->id }}">
                                                     {{ $inventory->postPrice }}£
                                                 </td>
                                                 <td class="py-2 text-center">
                                                     <form action="{{ route('cart.remove') }}" method="POST">
                                                         @csrf
-                                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                        <input type="hidden" name="color" value="{{ $variant->color }}">
-                                                        <input type="hidden" name="size" value="{{ $size->size }}">
-                                                        <button type="submit" class="text-red-500 text-lg md:text-xl">🗑</button>
+                                                        <input type="hidden" name="product_id"
+                                                            value="{{ $product->id }}">
+                                                        <input type="hidden" name="color"
+                                                            value="{{ $variant->color }}">
+                                                        <input type="hidden" name="size"
+                                                            value="{{ $size->size }}">
+                                                        <button type="submit"
+                                                            class="text-red-500 text-lg md:text-xl">🗑</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -73,13 +81,13 @@
                         </tbody>
                     </table>
                 </div>
-    
+
                 <!-- Subtotal -->
                 <div class="text-right mt-4 text-sm md:text-base">
                     <span class="font-semibold">Items subtotal: </span>
                     <span id="items-subtotal">691</span>
                 </div>
-    
+
                 <!-- Checkout Button -->
                 <div class="mt-4 flex justify-center">
                     <button class="w-full md:w-1/3 bg-blue-600 text-white font-bold py-3 rounded-lg text-sm md:text-lg"
@@ -136,7 +144,7 @@
                     <!-- Status Section -->
                     <div class="mb-6">
                         <label for="status" class="block text-lg font-semibold text-gray-800 mb-2">Status</label>
-                        <select id="status" name="status"
+                        <select required id="status" name="status"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700">
                             <option value="sell">Sell</option>
                             <option value="rent">Rent</option>
@@ -178,7 +186,8 @@
                                                     <!-- Product Image -->
                                                     <td>
                                                         <img src="{{ asset('storage/images/' . $variant->images->filter(fn($image) => $image->path)->pluck('path')->first()) }}"
-                                                        class="w-10 h-10 object-cover rounded"    width="60px" alt="Product Image">
+                                                            class="w-10 h-10 object-cover rounded" width="60px"
+                                                            alt="Product Image">
                                                     </td>
                                                     <!-- Product Name -->
                                                     <td>{{ $product->name->ar }}</td>
@@ -194,8 +203,7 @@
                                                     <!-- Quantity Selector -->
                                                     <td data-variant-id="{{ $variant->id }}"
                                                         data-size-id="{{ $size->id }}">
-                                                        <span
-                                                            class=" "
+                                                        <span class=" "
                                                             id="modal-quantity2-{{ $variant->id }}-{{ $size->id }}">1</span>
                                                     </td>
 
@@ -205,8 +213,8 @@
                                                         {{ $inventory->postPrice }}£
                                                     </td>
                                                     <!-- Delete Button -->
-                                                    <td class="py-4 text-center">
-                                                        <input type="text" class="rounded-lg"
+                                                    <td class="py-4 text-center ">
+                                                        <input required type="number" class="rounded-lg"
                                                             name="products[{{ $variant->id }}_{{ $size->id }}][sale_price]">
                                                     </td>
                                                     <!-- Hidden Inputs for Form Submission -->
@@ -451,6 +459,36 @@
         document.getElementById('add-client-button').addEventListener('click', function() {
             const newClientForm = document.getElementById('new-client-form');
             newClientForm.classList.toggle('hidden');
+        });
+
+
+        // 
+        document.addEventListener("DOMContentLoaded", function() {
+            const clientSelect = document.getElementById("client");
+            console.log(clientSelect);
+            
+            const addClientButton = document.getElementById("add-client-button");
+            console.log(addClientButton);
+            
+            const newClientForm = document.getElementById("new-client-form");
+            console.log(newClientForm);
+            
+            // Ensure one option is selected before submitting
+            document.getElementById("checkout-form").addEventListener("submit", function(event) {
+                const clientSelected = clientSelect.value !== "";
+                console.log(clientSelected);
+                
+                const newClientFilled = document.getElementById("client-name").value.trim() !== "" &&
+                console.log(newClientFilled);
+                
+                    document.getElementById("client-phone").value.trim() !== "" &&
+                    document.getElementById("client-address").value.trim() !== "";
+
+                if (!clientSelected && !newClientFilled) {
+                    event.preventDefault(); // Stop form submission
+                    alert("Please select an existing client or add a new one.");
+                }
+            });
         });
     </script>
 

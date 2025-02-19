@@ -46,6 +46,7 @@
                                     </a>
                                     <!-- Delete Button -->
                                     @if (auth()->user()->role === 'admin')
+                                    {{-- {{ dump(auth()->user()->role) }} --}}
                                         <form action="{{ route('clients.delete', $client->id) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this client?');">
                                             @csrf

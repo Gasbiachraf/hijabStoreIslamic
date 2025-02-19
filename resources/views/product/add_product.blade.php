@@ -7,17 +7,35 @@
 
     <form x-data="{
         checkInfo: { check_category: false, check_subCategory: false, check_title: [false, false, false], check_description: [false, false, false], check_type: [false, false, false] },
-        isComplete() {
+        checkVariant: { check_color: false, check_image: false, check_size: [false, false] },
+        isCompleteInfo() {
             // Check the boolean fields directly
             if (!this.checkInfo.check_category || !this.checkInfo.check_subCategory) {
                 return false;
             }
-    
             // Check if all array fields are true
             return this.checkInfo.check_title.every(Boolean) &&
                 this.checkInfo.check_description.every(Boolean) &&
                 this.checkInfo.check_type.every(Boolean);
+        },
+        isCompleteVariant() {
+            // Check the boolean fields directly
+            if (!this.checkVariant.check_color || !this.checkVariant.check_image) {
+                return false;
+            }
+    
+            // Check if all array fields are true
+            return this.checkVariant.check_size.every(Boolean);
+        },
+        isStepComplete(step) {
+            if (step === 0) {
+                return this.isCompleteInfo();
+            } else if (step === 1) {
+                return this.isCompleteVariant();
+            }
+            return true; // Assuming step 2 doesn't need validation
         }
+    
     }" action="{{ route('product.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div id="infoContainer" x-data='{category:"", sub_category:"",}' class="p-[3vw] w-full gap-5 bg-teta rounded-lg">
@@ -38,7 +56,8 @@
                     {{-- info --}}
                     <div id="Info" x-show="steps[currentStep] === 'Info'">
                         {{-- category && sub category --}}
-                        <div class="w-full bg--500 flex lg:flex-row flex-col gap-5 items-center">
+                        <div x-data="{ cat: '', subCategorys: {{ json_encode($subCategories) }} }"
+                            class="w-full bg--500 flex lg:flex-row flex-col gap-5 items-center">
                             <div class="lg:w-1/2 w-full flex flex-col gap-3 py-4">
                                 <div class="flex w-full gap-2 items-center justify-between">
                                     <h1 class="font-medium">Category</h1>
@@ -56,10 +75,12 @@
                                         </div>
                                     </x-modal>
                                 </div>
-                                <select x-on:input="checkInfo.check_category = true" name="category_id" id="">
-                                    <option value="">select a category</option>
+
+                                <select x-on:input="checkInfo.check_category = true" x-model="cat" name="category_id">
+                                    <option value="" disabled selected>select a category</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}">
+                                            {{ $category->name }}</option>
                                     @endforeach
                                     <template x-if=category>
                                         <option value="" x-text='category'></option>
@@ -85,12 +106,18 @@
                                         </div>
                                     </x-modal>
                                 </div>
+
+                                {{-- @php
+                                    $subCategory = Category::where('id','cat')->get();
+                                @endphp --}}
                                 <select x-on:input="checkInfo.check_subCategory = true" name="sub_category_id"
                                     id="">
-                                    <option value="">select a Sub Category</option>
-                                    @foreach ($subCategories as $subCategory)
-                                        <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
-                                    @endforeach
+                                    <option value="" selected disabled>select a Sub Category</option>
+                                    <template x-for="subCategory in subCategorys" :key="subCategory.id">
+                                        <template x-if="subCategory.category_id == cat">
+                                            <option :value="subCategory.id" x-text="subCategory.name"></option>
+                                        </template>
+                                    </template>
                                     <template x-if=sub_category>
                                         <option value="" x-text='sub_category'></option>
                                     </template>
@@ -110,8 +137,7 @@
                             <div id="english" x-show='currentPage == languages[0]' class="flex flex-col gap-3 mt-4">
                                 <div class="flex flex-col gap-3">
                                     <label for="">Product Title</label>
-                                    <input 
-                                        x-on:input="checkInfo.check_title[0] = true" type="text"
+                                    <input x-on:input="checkInfo.check_title[0] = true" type="text"
                                         name="product_name[en]" class="bg-gray-50/80" placeholder="Title">
                                 </div>
                                 <div class="flex flex-col gap-3">
@@ -177,8 +203,8 @@
                                 <div class="flex justify-between py-3 items-center">
                                     <div class="flex items-center gap-3">
                                         <input type="color" x-ref="chooseColor"
-                                            x-on:input='col.hex = $refs.chooseColor.value' name="color[]"
-                                            value="" class="h-10">
+                                            x-on:input='col.hex = $refs.chooseColor.value; checkVariant.check_color = true'
+                                            name="color[]" value="" class="h-10">
                                         <span x-text="col.hex"></span>
                                     </div>
                                     <div class="hover:bg-slate-300/50 group  flex justify-center items-center p-2 ">
@@ -197,15 +223,15 @@
                                     <div class="grid w-full max-w-xs items-center gap-1.5">
                                         <label
                                             class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Picture</label>
-                                        <input id="picture" x-bind:name="`variant_images[${col.hex}][]`" multiple
-                                            type="file"
+                                        <input id="picture" x-on:input="checkVariant.check_image = true"
+                                            x-bind:name="`variant_images[${col.hex}][]`" multiple type="file"
                                             class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium">
                                     </div>
                                 </div>
                                 <div class="">
                                     <div class="flex justify-between">
                                         <p>Sizes</p>
-                                        <button x-on:click="col.sizes.push({id: Date.now(), value: ''})"
+                                        <button x-on:click="col.sizes.push({id: Date.now(), value: ''}); check"
                                             type="button" class="bg-beta px-4 py-2 rounded">+ Add
                                             Sizes</button>
                                     </div>
@@ -215,15 +241,16 @@
                                             <div class="flex flex-col gap-2">
                                                 <label
                                                     class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Size</label>
-                                                <input type="text" x-model="size.value"
-                                                    x-bind:name="`size[${col.hex}_${i + 1}]`"
+                                                <input type="text" x-on:input="checkVariant.check_size[0] = true"
+                                                    x-model="size.value" x-bind:name="`size[${col.hex}_${i + 1}]`"
                                                     placeholder="XS-S-M-L-XL-XXl">
                                             </div>
                                             <div class="flex flex-col gap-2">
                                                 <label
                                                     class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Quantity</label>
                                                 <input type="number" x-bind:name="`quantity[${col.hex}_${i + 1}]`"
-                                                    class="input-number" placeholder="0">
+                                                    class="input-number" placeholder="0"
+                                                    x-on:input="checkVariant.check_size[1] = true">
                                             </div>
                                             <div
                                                 class="hover:bg-slate-300/50 group  flex justify-center items-center p-2 ">
@@ -270,7 +297,8 @@
                     <div class="flex justify-between items-center pt-8 ">
                         <button type="button" x-on:click="currentStep > 0 ? currentStep -= 1 : '' "
                             class="bg-alpha/50 px-4 py-2 rounded font-medium">Previous</button>
-                        <button x-bind:disabled="!isComplete()" type="" x-bind:type="currentStep === 2 ? 'submit' : 'button'"
+                        <button x-bind:disabled="!isStepComplete(currentStep)" type=""
+                            x-bind:type="currentStep === 2 ? 'submit' : 'button'"
                             x-on:click="currentStep < 2 ? currentStep +=  1 : '' "
                             class="bg-alpha/50 px-4 py-2 rounded font-medium"
                             x-text="currentStep < 2 ? 'Next' : 'Create' "></button>

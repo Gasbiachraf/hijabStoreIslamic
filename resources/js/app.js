@@ -6,16 +6,21 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-// ^^ blogs :
-// var quill = new Quill('#editor', {
-//     theme: 'snow'
-// });
 
-// // On form submit, update hidden input with Quill content
-// document.querySelector('form').addEventListener('change', function() {
-//     console.log(quill.root.innerHTML());
-//     document.querySelector('#quill-content').value = quill.root.innerHTML();
-// });
+const sideBar = document.querySelector('#sideBar');
+const closeIcone = document.querySelector('#closeMenu');
+const menuIcone = document.querySelector('#menuIcon');
+closeIcone.addEventListener('click',()=>{
+    sideBar.classList.remove('fixed', 'z-[9999]')
+    sideBar.classList.add('hidden')
+    closeIcone.classList.add('hidden')
+})
+menuIcone.addEventListener('click',()=>{
+    sideBar.classList.remove('hidden')
+    sideBar.classList.add('fixed', 'z-[9999]')
+    closeIcone.classList.remove('hidden')
+})
+
 
 const options = {
     chart: {

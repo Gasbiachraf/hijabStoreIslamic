@@ -7,7 +7,13 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    //
+   
+    public function index()
+    {
+        $messages = Contact::all();
+        return view('contact.index', compact('messages'));
+    }
+
     public function store(Request $request)
     {
 
@@ -35,5 +41,13 @@ class ContactController extends Controller
         // Optionally, respond with a success message:
         return response()->json(['message' => 'Form data received successfully']);
     }
+
+    public function destroy($id)
+    {
+        Contact::findOrFail($id)->delete();
+        return redirect()->route('contacts.index')->with('success', 'Message deleted successfully.');
+    }
+
+
 
 }

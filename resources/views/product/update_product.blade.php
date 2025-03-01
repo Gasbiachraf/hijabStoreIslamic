@@ -198,9 +198,10 @@
 
                         <div class="flex flex-wrap gap-3 py-4">
                             @foreach ($product->inventories as $inventory)
-                                @foreach ($inventory->variants as $variant)
+                                @foreach ($inventory->variants as $key => $variant)
                                     <div id="variant-{{ $variant->id }}"
                                         class="bg-alpha/10 border border-black/10 w-[30%] relative flex justify-between gap-3 rounded-sm p-3">
+
                                         <div class="flex flex-col gap-3">
                                             <div style="background-color: {{ $variant->color }};"
                                                 class="w-[40px] h-[40px] rounded-full "></div>
@@ -222,8 +223,9 @@
                                         </div>
                                         <div
                                             class="hover:bg-red-500/50 absolute top-1 right-3 flex justify-center items-center rounded-md hover:text-white ">
-                                            <button type="button" onclick="deleteVariant(this)"
-                                                data-id="{{ $variant->id }}" class="bg-transparent">
+                                            <button
+                                                x-on:click.prevent="$dispatch('open-modal', 'delete_variant{{ $key }}')"
+                                                type="button" class="bg-transparent">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                     class="size-5 cursor-pointer group-hover:text-red-500">
@@ -231,6 +233,26 @@
                                                         d="M6 18 18 6M6 6l12 12" />
                                                 </svg>
                                             </button>
+                                            <x-modal name="delete_variant{{ $key }}" :show="$errors->variantDeletion->isNotEmpty()">
+                                                <div class="flex flex-col items-center gap-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="size-6 text-red-500">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                                                    </svg>
+                                                    <p class="text-black">Are you sure you want to delete the variant ?
+                                                    </p>
+                                                    <div class="flex gap-5 items-center">
+                                                        <button type="button"
+                                                            x-on:click.prevent='$dispatch("close-modal", "delete_variant{{ $key }}")'
+                                                            class="px-3 py-2 bg-gamma/50 rounded text-white w-fit">Cancel</button>
+                                                        <button type="button" data-id="{{ $variant->id }}"
+                                                            onclick="deleteVariant(this)"
+                                                            class="bg-red-500 px-4 py-2 text-white rounded">Delete</button>
+                                                    </div>
+                                                </div>
+                                            </x-modal>
                                         </div>
                                     </div>
                                 @endforeach
@@ -280,9 +302,17 @@
                                             <div class="flex flex-col gap-2">
                                                 <label
                                                     class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Size</label>
-                                                <input type="text" x-model="size.value"
-                                                    x-bind:name="`size[${col.hex}_${i + 1}]`"
-                                                    placeholder="XS-S-M-L-XL-XXl">
+                                                {{-- <input type="text" placeholder="XS-S-M-L-XL-XXl"> --}}
+                                                <select x-on:input="checkVariant.check_size[0] = true"
+                                                    x-model="size.value" x-bind:name="`size[${col.hex}_${i + 1}]`">
+                                                    <option selected disabled>Select a size</option>
+                                                    <option value="XS">XS</option>
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                    <option value="XXL">XXL</option>
+                                                </select>
                                             </div>
                                             <div class="flex flex-col gap-2">
                                                 <label
@@ -350,32 +380,6 @@
     </form>
 
     <script>
-        function deleteImage(button) {
-            const id = button.getAttribute('data-id');
-            const url = `/delete/image/${id}`;
-            fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to delete the image.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const imageDiv = document.getElementById(`image-${id}`);
-                    if (imageDiv) {
-                        imageDiv.remove();
-                    }
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
-        }
         // !!!!!!!!!!  !!!!!!!!!!  !!!!!!!!!!
         function deleteVariant(button) {
             const id = button.getAttribute('data-id');
@@ -398,57 +402,6 @@
                     if (cardDiv) {
                         cardDiv.remove();
                     }
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
-        }
-
-        function uploadImage(variantId) {
-            // const variantId = document.getElementById('variantId').value; // Get variant_id from hidden input or any source
-            const input = document.getElementById(`imageInput_${variantId}`);
-            const file = input.files[0];
-            if (!file) {
-                alert('Please select an image.');
-                return;
-            }
-            const formData = new FormData();
-            formData.append('variant_id', variantId);
-            formData.append('images', file);
-            console.log(formData);
-
-            fetch('/upload/image', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    },
-                    body: formData,
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to upload image.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-
-                    // Append the new image to the DOM
-                    const imageContainer = document.getElementById('image-container');
-                    const newImageDiv = document.createElement('div');
-                    newImageDiv.id = `image-${data.id}`;
-                    newImageDiv.className = 'relative w-32 h-32';
-                    newImageDiv.innerHTML = `
-                <img class="w-full h-full object-cover" src="/storage/images/${data.path}" alt="Uploaded Image">
-            <div class="bg-white rounded group flex justify-center items-center p-1 absolute top-3 right-3">
-                <button type="button" data-id="${data.id}" onclick="deleteImage(this)" class="bg-transparent">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer group-hover:text-red-500">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            `;
-                    imageContainer.appendChild(newImageDiv);
-                    input.value = "";
                 })
                 .catch(error => {
                     alert('Error: ' + error.message);

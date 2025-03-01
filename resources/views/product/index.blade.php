@@ -3,6 +3,11 @@
         <h2 class="font-semibold text-xl leading-tight">
             {{ __('Products') }}
         </h2>
+        <div>
+            <a href="/addproduct">
+                <button class="bg-gamma text-white rounded  px-4 py-2">Add Product</button>
+            </a>
+        </div>
     </x-slot>
 
     <div class="flex flex-col justify-center items-center p-1">
@@ -30,6 +35,7 @@
                 </div>
                 {{-- {{ dump($selectedProductIds) }} --}}
                 <div class="overflow-x-auto">
+                    
                     <form id="product-form" method="POST" action="{{ route('cart.store') }}">
                         @csrf
                         <table class="w-full text-sm text-gray-500">

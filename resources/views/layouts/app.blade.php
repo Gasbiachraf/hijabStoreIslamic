@@ -17,11 +17,11 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/hola.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/hola.js'])
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen flex bg-teta" >
+    <div class="min-h-screen flex bg-teta">
         {{-- @include('layouts.navigation') --}}
 
         <!-- Page Heading -->
@@ -30,8 +30,8 @@
 
             @isset($header)
 
-                <header class=" shadow flex  justify-between items-center w-full transition-all duration-300 bg-teta" >
-                    <div class="py-[1.25rem] flex gap-x-2 px-4 sm:px-6 lg:px-8 w-full">
+                <header class=" shadow flex  justify-between items-center w-full transition-all duration-300 bg-teta">
+                    <div class="py-[1.25rem] flex items-center gap-x-2 px-4 sm:px-6 lg:px-8 w-full">
 
                         <div class="flex justify-between items-center w-full">
                             @if (isset($title))
@@ -44,6 +44,11 @@
                             @endif
                             {{ $header }}
                         </div>
+                        <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6 font-bold lg:hidden">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
 
                     </div>
                     <div class="px-5 pt-2" x-data="{ showNotif: false }">
@@ -56,11 +61,11 @@
                             </svg>
                         </button>
 
-                        
+
                     </div>
 
 
-                    
+
                     {{-- drop down --}}
                     <div class="hidden mr-4 sm:flex {{ isset($header) ? '' : 'sm:ml-auto' }}">
                         <x-dropdown align="right" width="48">

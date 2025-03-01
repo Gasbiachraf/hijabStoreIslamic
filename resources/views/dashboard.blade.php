@@ -33,32 +33,35 @@
                     <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <h2 class="pb-4">Top Selling Products</h2>
                         @foreach ($products->take(3) as $k => $prd)
-                                @php
-                                    $firstImage = $prd[0]->variant->images->first();
-                                @endphp
-                                <div class="flex gap-3 border-t-2 py-2 {{ $k == 0 ? 'border-t-0' : 'border-t-2' }}">
-                                    <img class="w-10 h-10 object-cover object-center"
-                                        src="{{ asset('storage/images/' . $firstImage->path) }}" alt="">
-                                    <div class="flex justify-between w-full text-lg font-medium">
-                                        {{-- <dd>{{ $prd[0]->variant->inventory->product->name->en }}</dd> --}}
-                                        <p>{{ $prd[0]->variant->inventory->product->name->en }}</p>
-                                        <p>{{ count($prd) }}</p>
-                                    </div>
+                            @php
+                                $firstImage = $prd[0]->variant->images->first();
+                            @endphp
+                            <div class="flex gap-3 border-t-2 py-2 {{ $k == 0 ? 'border-t-0' : 'border-t-2' }}">
+                                <img class="w-10 h-10 object-cover object-center"
+                                    src="{{ asset('storage/images/' . $firstImage->path) }}" alt="">
+                                <div class="flex justify-between w-full text-lg font-medium">
+                                    {{-- <dd>{{ $prd[0]->variant->inventory->product->name->en }}</dd> --}}
+                                    <p>{{ $prd[0]->variant->inventory->product->name->en }}</p>
+                                    <p>{{ count($prd) }}</p>
                                 </div>
+                            </div>
                         @endforeach
                     </div>
 
                 </div>
-                {{-- stats --}}
-                <div class="bg-white p-3 rounded-lg">
-                    <div class="px-3">
-                        <p class="text-xl font-medium">
-                            Last 30 days sales 
-                        </p>
-                        <p class="text-xl font-medium">{{ $totalEarningThisMonth }} Dhs</p>
+                <div>
+                    {{-- stats --}}
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="px-3">
+                            <p class="text-xl font-medium">
+                                Last 30 days sales
+                            </p>
+                            <p class="text-xl font-medium">{{ $totalEarningThisMonth }} Dhs</p>
+                        </div>
+                        <div id="chart" class="">
+                        </div>
                     </div>
-                    <div id="chart" class="">
-                    </div>
+                    {{--  --}}
                 </div>
             </div>
 
@@ -69,7 +72,8 @@
         {{-- orders cards --}}
         <div class="flex lg:flex-row flex-col gap-3 py-3">
             <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
+                <div
+                    class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -82,7 +86,8 @@
                 </div>
             </div>
             <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 lg:w-[3vw]  w-[8vw] flex justify-center items-center aspect-square rounded-full">
+                <div
+                    class="bg-green-400 lg:w-[3vw]  w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg class="size-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd"
@@ -96,7 +101,8 @@
                 </div>
             </div>
             <div class="flex items-center gap-3 bg-white lg:w-1/4 rounded-lg p-3">
-                <div class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
+                <div
+                    class="bg-green-400 lg:w-[3vw] w-[8vw] flex justify-center items-center aspect-square rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -126,10 +132,12 @@
                     @foreach ($commands as $key => $command)
                         @if ($key < 9)
                             <tr class="bg-white hover:bg-gray-50 rounded-br-lg">
-                                <td class="px-6 py-3 border-b text-center {{ $key == 8 ? 'rounded-bl-lg' : 'rounded-none' }}">
+                                <td
+                                    class="px-6 py-3 border-b text-center {{ $key == 8 ? 'rounded-bl-lg' : 'rounded-none' }}">
                                     {{ $command->client->name }}
                                 </td>
-                                <td class="px-6 py-3 border-b text-center"><a href="">{{ count($command->variants) }}</a>
+                                <td class="px-6 py-3 border-b text-center"><a
+                                        href="">{{ count($command->variants) }}</a>
                                 </td>
                                 {{-- <td class="px-6 py-3">{{ $inventory->product->category->name }}</td> --}}
                                 <td class="px-6 py-3 border-b text-center"><span
@@ -140,7 +148,7 @@
                                         {{ $command->livraison === 'livraison' ? 'Livraison' : 'On Site' }}
                                     </span>
                                 </td>
-                                <td 
+                                <td
                                     class="px-6 py-3 border-b flex justify-center {{ $key == 8 ? 'rounded-br-lg' : 'rounded-none' }}">
                                     <a class="" href="">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -169,7 +177,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-xl font-bold">{{ $totalEarnings }}</p>
+                    <p class="text-xl font-bold">{{ $totalEarnings }} MAD</p>
                     <p>Total Earning</p>
                 </div>
             </div>
@@ -182,7 +190,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-xl font-bold">{{ $totalTodayEarning }}</p>
+                    <p class="text-xl font-bold">{{ $totalTodayEarning }} MAD</p>
                     <p>Today's Earning</p>
                 </div>
             </div>

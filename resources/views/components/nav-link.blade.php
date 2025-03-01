@@ -8,5 +8,5 @@ $classes = ($active ?? false)
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
-    <p class="hidden group-hover:block">{{ $route }}</p>
+    <p class="lg:hidden lg:group-hover:block">{{ $route }}</p>
 </a>

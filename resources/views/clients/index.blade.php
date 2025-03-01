@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="flex flex-col items-center p-10">
-        <div class="w-full max-w-6xl bg-white shadow-md rounded-lg p-6 sm ">
+    <div class="flex flex-col items-center w-[100%] ">
+        <div class="w-full bg-white shadow-md rounded-lg p-6 sm ">
             <!-- Add Client Button -->
             <div class="flex justify-end mb-6">
                 <a href="{{ route('clients.create') }}"

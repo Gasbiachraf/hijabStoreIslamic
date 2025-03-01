@@ -72,6 +72,10 @@ Route::middleware('auth')->group(function () {
     // images 
     Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
 });
+//Contact :
+Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+Route::get('/contacts/destroy', [ContactController::class, 'destroy'])->name('contacts.destroy');
+
 // ^^ Blogs :
 Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
@@ -81,4 +85,4 @@ Route::post('blogs/store', [BlogController::class, 'store'])->name('blog.store')
 Route::put('blogs/update/{blog}', [BlogController::class, 'update'])->name('blog.update');
 Route::get('/blogs/edit/{blog}', [BlogController::class, 'edit'])->name('blog.edit');
 require __DIR__ . '/auth.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

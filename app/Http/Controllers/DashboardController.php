@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Command;
 use App\Models\CommandVariant;
+use App\Models\Contact;
 use App\Models\Product;
 use App\Models\Variant;
 use Carbon\Carbon;
@@ -99,8 +100,8 @@ class DashboardController extends Controller
         // Merge with default days to ensure all days exist
         $last30daysSells = $days->map(fn($sales, $timestamp) => [$timestamp, $salesData->get($timestamp, 0)])->values();
 
+        $messages = Contact::take(8)->where('is_read', false)->get();
 
-
-        return view('dashboard', compact(['variants', 'commands', 'last30Orders', 'total7daysEarnings', 'totalEarnings', 'storeCommands', 'inPresentCommands', 'totalTodayEarning', 'clients', 'categories', 'totalEarningThisMonth', 'products', 'topcategories', 'totalCategorie', 'last30daysSells']));
+        return view('dashboard', compact(['variants', 'commands', 'last30Orders', 'total7daysEarnings', 'totalEarnings', 'storeCommands', 'inPresentCommands', 'totalTodayEarning', 'clients', 'categories', 'totalEarningThisMonth', 'products', 'topcategories', 'totalCategorie', 'last30daysSells', 'messages']));
     }
 }

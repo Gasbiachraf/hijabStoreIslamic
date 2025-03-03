@@ -241,9 +241,17 @@
                                             <div class="flex flex-col gap-2">
                                                 <label
                                                     class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Size</label>
-                                                <input type="text" x-on:input="checkVariant.check_size[0] = true"
-                                                    x-model="size.value" x-bind:name="`size[${col.hex}_${i + 1}]`"
-                                                    placeholder="XS-S-M-L-XL-XXl">
+                                                {{-- <input type="text" placeholder="XS-S-M-L-XL-XXl"> --}}
+                                                <select x-on:input="checkVariant.check_size[0] = true"
+                                                    x-model="size.value" x-bind:name="`size[${col.hex}_${i + 1}]`">
+                                                    <option selected disabled>Select a size</option>
+                                                    <option value="XS">XS</option>
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                    <option value="XXL">XXL</option>
+                                                </select>
                                             </div>
                                             <div class="flex flex-col gap-2">
                                                 <label

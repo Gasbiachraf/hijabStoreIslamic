@@ -49,9 +49,10 @@
                     </div>
 
                 </div>
-                <div>
+                <div class="flex gap-3">
+
                     {{-- stats --}}
-                    <div class="bg-white p-3 rounded-lg">
+                    <div class="bg-white p-3 rounded-lg lg:w-3/4">
                         <div class="px-3">
                             <p class="text-xl font-medium">
                                 Last 30 days sales
@@ -61,7 +62,33 @@
                         <div id="chart" class="">
                         </div>
                     </div>
-                    {{--  --}}
+                    {{-- messages  --}}
+                    <div class="bg-white p-3 rounded-lg lg:w-1/4 overflow-hidden">
+                        @if (count($messages) == 0)
+                            <div class="mt-5 text-xl font-medium text-center">
+                                <p>There is no messages</p>
+                            </div>
+                        @else
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="border-b-2 border-black/50 ">Name</th>
+                                        <th class="border-b-2 border-black/50 ">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($messages as $message)
+                                        <tr>
+                                            <td class="border-b-2 border-black/50 p-3">{{ $message->name }}</td>
+                                            <td class="border-b-2 border-black/50 p-3">
+                                                {{ Str::limit($message->message, 25, '...') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+
                 </div>
             </div>
 

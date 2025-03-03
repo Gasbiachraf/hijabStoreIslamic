@@ -50,6 +50,7 @@
 
                 </div>
                 <div class="flex gap-3">
+
                     {{-- stats --}}
                     <div class="bg-white p-3 rounded-lg lg:w-3/4">
                         <div class="px-3">
@@ -63,23 +64,31 @@
                     </div>
                     {{-- messages  --}}
                     <div class="bg-white p-3 rounded-lg lg:w-1/4 overflow-hidden">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th class="border-b-2 border-black/50 ">Name</th>
-                                    <th class="border-b-2 border-black/50 ">Message</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($messages as $message)
+                        @if (count($messages) == 0)
+                            <div class="mt-5 text-xl font-medium text-center">
+                                <p>There is no messages</p>
+                            </div>
+                        @else
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td class="border-b-2 border-black/50 p-3">{{ $message->name }}</td>
-                                        <td class="border-b-2 border-black/50 p-3">{{ Str::limit( $message->message, 25, '...') }}</td>
+                                        <th class="border-b-2 border-black/50 ">Name</th>
+                                        <th class="border-b-2 border-black/50 ">Message</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($messages as $message)
+                                        <tr>
+                                            <td class="border-b-2 border-black/50 p-3">{{ $message->name }}</td>
+                                            <td class="border-b-2 border-black/50 p-3">
+                                                {{ Str::limit($message->message, 25, '...') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
+
                 </div>
             </div>
 

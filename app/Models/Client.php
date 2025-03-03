@@ -18,5 +18,6 @@ class Client extends Model
     public function commands(){
         return $this->hasMany(Command::class);
     }
+    
 
 }

@@ -35,7 +35,13 @@
                 </div>
                 {{-- {{ dump($selectedProductIds) }} --}}
                 <div class="overflow-x-auto">
+                    <div class="mb-4">
+                        <input type="text" id="productSearch" placeholder="Search products..." 
+                               class="border p-2 rounded w-full" 
+                               oninput="filterProducts()">
+                    </div>
                     
+
                     <form id="product-form" method="POST" action="{{ route('cart.store') }}">
                         @csrf
                         <table class="w-full text-sm text-gray-500">
@@ -167,6 +173,22 @@
 
 
     <script>
+    function filterProducts() {
+    const searchValue = document.getElementById('productSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        const productName = row.querySelector('td:nth-child(2)').innerText.toLowerCase();
+        
+        if (productName.includes(searchValue)) {
+            row.style.display = ''; // Show row
+        } else {
+            row.style.display = 'none'; // Hide row
+        }
+    });
+}
+
+
         function saveSelection(productId, color, size) {
             fetch('/cart/store', {
                     method: 'POST',

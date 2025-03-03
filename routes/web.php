@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/clients/{id}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     Route::put('/clients/update/{id}', [ClientController::class, 'update'])->name('clients.update');
+    Route::get('/clients/{id}/historique', [ClientController::class, 'historique'])->name('clients.historique');
+
     //*Products
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     //!Commande

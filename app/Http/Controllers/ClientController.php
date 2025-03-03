@@ -48,4 +48,10 @@ class ClientController extends Controller
         $client->delete();
         return redirect()->back();
     }
+    public function historique($id)
+{
+    $client = Client::with('commands')->findOrFail($id);  // Assuming you have a relation "commands"
+    return view('clients.historique', compact('client'));
+}
+
 }

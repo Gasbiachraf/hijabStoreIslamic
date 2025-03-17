@@ -29,6 +29,9 @@ class ProductCollection extends ResourceCollection
                         'type' => $inventory->type,
                         'variants' => $inventory->variants->map(function ($variant) {
                             return [
+                                'images' => $variant->images->map(function ($img){
+                                    return $img->path;
+                                }),
                                 'color' => $variant->color,
                                 'volumes' => $variant->sizes->map(function ($volume) {
                                     return [

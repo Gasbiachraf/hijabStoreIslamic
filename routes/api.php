@@ -10,8 +10,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/products', [productController::class, 'products']);
+Route::get('/categories', [productController::class, 'categories']);
+Route::get('/products', [productController::class, 'index']);
+Route::get('/colors', [productController::class, 'colors']);
 //Contact 
 Route::post('/contact', [ContactController::class, 'store']);
-Route::get('/products', [productController::class, 'index']);
 Route::get('/blogs', [BlogController::class, 'index']);

@@ -11,7 +11,7 @@
                 <div class="flex lg:flex-row flex-col gap-3">
                     <div class="bg-white p-3 rounded-lg border lg:w-1/3 aspect-video">
                         <div class="flex justify-between">
-                            <h3>Total Earning</h3>
+                            <h3>Total Earning testing</h3>
                             <h3>last 7 days</h3>
                         </div>
                         <p class="text-3xl font-bold">{{ $total7daysEarnings }} Dhs</p>

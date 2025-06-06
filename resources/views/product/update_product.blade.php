@@ -29,7 +29,46 @@
         </div>
     </x-slot>
     <form x-data="{
-        checkInfo: { check_category: false, check_subCategory: false, check_title: [false, false, false], check_description: [false, false, false], check_type: [false, false, false] },
+    
+        originalVariantsCount: {{ $product->inventories->sum(function ($inventory) {return $inventory->variants->count();}) }},
+        deletedVariants: [],
+        colors: [],
+    
+        // Calculate remaining existing variants
+        getRemainingExistingVariants() {
+            return this.originalVariantsCount - this.deletedVariants.length;
+        },
+    
+        // Mark variant as deleted (called when delete button is clicked)
+        markVariantAsDeleted(variantId) {
+            if (!this.deletedVariants.includes(variantId)) {
+                this.deletedVariants.push(variantId);
+            }
+        },
+    
+        // Check if we have any variants at all (existing or new)
+        hasAnyVariants() {
+            const remainingExisting = this.getRemainingExistingVariants();
+            const newVariants = this.colors.length;
+            return remainingExisting > 0 || newVariants > 0;
+        },
+    
+        // Validation for step completion
+        isStepComplete(step) {
+            if (step === 1) {
+                // Variants step: Must have at least one variant (existing or new)
+                return this.hasAnyVariants();
+            }
+            return true;
+        },
+    
+        // Get validation message for user feedback
+        getValidationMessage() {
+            if (!this.hasAnyVariants()) {
+                return 'Cannot proceed - Product must have at least one variant. Add a new variant or keep existing ones.';
+            }
+            return 'Ready to proceed - Product has variants.';
+        }
     }" action="{{ route('product.update', $product) }}" method="post"
         enctype="multipart/form-data">
         @csrf
@@ -187,10 +226,13 @@
                     </div>
 
                     {{-- variants --}}
-                    <div id="Variants" x-show="steps[currentStep] === 'Variants'" x-data="{ colors: [] }"
-                        class="py-4">
+                    <div id="Variants" x-show="steps[currentStep] === 'Variants'" class="py-4">
                         <div class="flex justify-between">
-                            <h1 class="text-xl font-medium">Variants</h1>
+                            <div>
+                                <h1 class="text-xl font-medium">Variants</h1>
+                                <p class="text-sm text-gray-600 mt-1">Product must have at least one variant to proceed
+                                </p>
+                            </div>
                             <button type="button" x-on:click="colors.push({ id: Date.now(), hex:'', sizes: [] });"
                                 class="bg-slate-100 py-2 px-4 rounded">+
                                 Add Color</button>
@@ -248,7 +290,7 @@
                                                             x-on:click.prevent='$dispatch("close-modal", "delete_variant{{ $key }}")'
                                                             class="px-3 py-2 bg-gamma/50 rounded text-white w-fit">Cancel</button>
                                                         <button type="button" data-id="{{ $variant->id }}"
-                                                            onclick="deleteVariant(this)"
+                                                            x-on:click="deleteVariant({{ $variant->id }})"
                                                             class="bg-red-500 px-4 py-2 text-white rounded">Delete</button>
                                                     </div>
                                                 </div>
@@ -337,6 +379,20 @@
                                 </div>
                             </div>
                         </template>
+
+                        <!-- Variant Count Status -->
+                        <div class="mt-4 p-3 rounded"
+                            x-bind:class="isStepComplete(1) ? 'bg-green-100 border border-green-300' :
+                                'bg-red-100 border border-red-300'">
+                            <div class="text-sm">
+                                <p><strong>Existing variants:</strong> <span
+                                        x-text="getRemainingExistingVariants()"></span> remaining (of <span
+                                        x-text="originalVariantsCount"></span> original)</p>
+                                <p><strong>New variants:</strong> <span x-text="colors.length"></span> added</p>
+                                <p class="mt-2" x-bind:class="isStepComplete(1) ? 'text-green-700' : 'text-red-700'"
+                                    x-text="getValidationMessage()"></p>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- pricing --}}
@@ -368,9 +424,15 @@
                     <div class="flex justify-between items-center pt-8 ">
                         <button type="button" x-on:click="currentStep > 0 ? currentStep -= 1 : '' "
                             class="bg-alpha/50 px-4 py-2 rounded font-medium">Previous</button>
-                        <button type="" x-bind:type="currentStep === 3 ? 'submit' : 'button'"
-                            x-on:click="currentStep <= 2 ? currentStep += 1 : null"
-                            class="bg-alpha/50 px-4 py-2 rounded font-medium"
+                        <button type="button" x-bind:disabled="!isStepComplete(currentStep)"
+                            x-on:click="
+        if (currentStep < 2) {
+            currentStep += 1;
+        } else {
+            $el.closest('form').submit(); // Programmatic form submit
+        }
+    "
+                            class="bg-alpha/50 px-4 py-2 rounded font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             x-text="currentStep < 2 ? 'Next' : 'Update'">
                         </button>
 
@@ -380,10 +442,9 @@
     </form>
 
     <script>
-        // !!!!!!!!!!  !!!!!!!!!!  !!!!!!!!!!
-        function deleteVariant(button) {
-            const id = button.getAttribute('data-id');
-            const url = `/delete/variant/${id}`;
+        // Updated deleteVariant function that integrates with Alpine.js tracking
+        function deleteVariant(variantId) {
+            const url = `/delete/variant/${variantId}`;
             fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -398,9 +459,16 @@
                     return response.json();
                 })
                 .then(data => {
-                    const cardDiv = document.getElementById(`variant-${id}`);
+                    // Remove the variant from the DOM
+                    const cardDiv = document.getElementById(`variant-${variantId}`);
                     if (cardDiv) {
                         cardDiv.remove();
+                    }
+
+                    // Update Alpine.js tracking - find the form component and mark variant as deleted
+                    const formElement = document.querySelector('form[x-data]');
+                    if (formElement && formElement._x_dataStack && formElement._x_dataStack[0]) {
+                        formElement._x_dataStack[0].markVariantAsDeleted(variantId);
                     }
                 })
                 .catch(error => {

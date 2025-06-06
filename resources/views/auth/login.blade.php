@@ -18,7 +18,7 @@
 </head>
 
 <body class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
-    style="background-image:url('https://source.unsplash.com/1920x1080/?technology,nature')">
+    style="background-image:url('images/hijabbg.png')">
     {{-- <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/hijab_background.jpg') }}');"></div> --}}
 
     @auth
@@ -43,13 +43,13 @@
     @else
         <!-- If the user is NOT authenticated (Show Login Form) -->
         <div class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
-            style="background-image:url('https://as1.ftcdn.net/v2/jpg/03/15/67/18/1000_F_315671889_obi7zBaYWHwzDRkHP4Tg92QTeSg0sLVW.jpg')">
-            <div class="rounded-xl bg-gray-800 bg-opacity-50 px-16 py-10 shadow-lg backdrop-blur-md max-sm:px-8">
+            style="background-image:url('{{ asset('assets/images/hijabbg.png') }}')">
+            <div class="rounded-xl bg-gray-800 bg-opacity-50 px-16 py-10 shadow-lg backdrop-blur-sm max-sm:px-8">
                 <div class="text-white">
                     <div class="mb-8 flex flex-col items-center">
-                        <img src="https://www.logo.wine/a/logo/Instagram/Instagram-Glyph-Color-Logo.wine.svg" width="150"
+                        <img src="{{ asset('assets/images/hijabilogo.png') }}" width="150"
                             alt="Instagram Logo" />
-                        <h1 class="mb-2 text-2xl font-semibold">Instagram</h1>
+                        {{-- <h1 class="mb-2 text-2xl font-semibold">Instagram</h1> --}}
                         <span class="text-gray-300">Enter Login Details</span>
                     </div>
 

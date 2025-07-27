@@ -68,7 +68,7 @@ class BlogController extends Controller
             // dd($request);
             $image = $request->file("image");
             $filename = $image->hashName();
-            $image->storeAs("blog_images/" . $filename);
+            $image->storeAs("blogimages/" . $filename);
             Blog::create([
                 "title" => $request->title,
                 "description" => $request->description,
@@ -101,10 +101,10 @@ class BlogController extends Controller
             if ($request->hasFile('image')) {
 
                 if ($blog->image) {
-                    Storage::delete('public/blog_images/' . $blog->image);
+                    Storage::delete('public/blogimages/' . $blog->image);
                 }
 
-                $imagePath = $request->file('image')->store('blog_images', 'public');
+                $imagePath = $request->file('image')->store('blogimages', 'public');
                 $blog->image = basename($imagePath);
             }
             $blog->update([
@@ -129,7 +129,7 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         try {
-            Storage::disk("public")->delete('blog_images' . $blog->image);
+            Storage::disk("public")->delete('blogimages' . $blog->image);
             $blog->delete();
             return back()->with('success', 'Blog deleted successfully.');
         } catch (\Exception $e) {

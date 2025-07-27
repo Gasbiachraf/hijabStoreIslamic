@@ -1,5 +1,5 @@
 <div class="bg-gray-100 p-4 rounded shadow-md w-80">
-    <img src="{{ asset('storage/blogimages/' . $blog->image) }}" alt="Blog Image"
+    <img src="{{ asset('storage/images/' . $blog->image) }}" alt="Blog Image"
         class="w-full h-40 object-cover rounded">
     {{-- @dump($blog->image). --}}
     <h2 class="text-lg font-semibold mt-2">{{ $blog->title }}</h2>

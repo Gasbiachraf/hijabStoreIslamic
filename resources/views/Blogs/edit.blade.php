@@ -32,8 +32,8 @@
 
                             <!-- Preview Current Image -->
                             <div class="mt-2">
-                                <img id="imagePreview" src="{{ asset('storage/blog_images/' . $blog->image) }}"
-                                    alt="Current Image" class="w-40 h-40 object-cover rounded-md">
+                                <img id="imagePreview" src="{{ asset('storage/images/' . $blog->image) }}"
+                                    alt="Blog Image" class="w-40 h-40 object-cover rounded-md">
                                 {{-- {{ dd($blog->image) }} --}}
                             </div>
                         </div>

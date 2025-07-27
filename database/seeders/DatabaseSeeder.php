@@ -24,9 +24,9 @@ class DatabaseSeeder extends Seeder
         //     VariantSeeder::class,
         // ]);
         User::insert([
-            'name' => 'lmhayeb',
-            'email' => 'lmhayeb@gmail.com',
-            'password' => Hash::make('lmhayeb@gmail.com'),
+            'name' => 'Fatimazahra ADNANE',
+            'email' => 'fati@gmail.com',
+            'password' => Hash::make('Fati@hijabi@25'),
             'role' => 'admin',
         ]);
 

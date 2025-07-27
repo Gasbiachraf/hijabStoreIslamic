@@ -259,9 +259,14 @@
                                         @php
                                             $firstImage = $variant->images->first();
                                         @endphp
-                                        <div class="w-[70px] h-[70px]"><img class="w-full h-full object-contain"
-                                                src="{{ asset('storage/images/' . $firstImage->path) }}"
-                                                alt="">
+                                        <div class="w-[70px] h-[70px]">
+                                            @if ($firstImage)
+                                            <img class="w-full h-full object-contain"
+                                            src="{{ asset('storage/images/' . $firstImage->path) }}"
+                                            alt="">
+                                            @else
+                                            <img class="w-full h-full object-contain" src="{{ asset('assets/images/hijabilogo.png') }}" alt="logo">
+                                            @endif
                                         </div>
                                         <div
                                             class="hover:bg-red-500/50 absolute top-1 right-3 flex justify-center items-center rounded-md hover:text-white ">

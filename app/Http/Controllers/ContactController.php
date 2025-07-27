@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
    
     public function index()
     {
-        $messages = Contact::all();
-        return view('contact.index', compact('messages'));
+        try {
+            $messages = Contact::all();
+            return view('contact.index', compact('messages'));
+        } catch (\Exception $e) {
+            Log::error('ContactController index error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->with('error', 'An error occurred while loading messages. Please try again.');
+        }
     }
 
     public function store(Request $request)
@@ -44,8 +55,19 @@ class ContactController extends Controller
 
     public function destroy($id)
     {
-        Contact::findOrFail($id)->delete();
-        return redirect()->route('contacts.index')->with('success', 'Message deleted successfully.');
+        try {
+            Contact::findOrFail($id)->delete();
+            return redirect()->route('contacts.index')->with('success', 'Message deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('ContactController destroy error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'contact_id' => $id
+            ]);
+
+            return redirect()->back()->with('error', 'An error occurred while deleting the message. Please try again.');
+        }
     }
 
 

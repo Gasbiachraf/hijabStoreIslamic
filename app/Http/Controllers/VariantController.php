@@ -10,6 +10,7 @@ use App\Models\Size;
 use App\Models\Subcategory;
 use App\Models\Variant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -17,38 +18,50 @@ class VariantController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-        $categories = Category::all();
-        $subCategories = Subcategory::all();
-        return view('product.add_product', compact('products', 'categories', 'subCategories'));
+        try {
+            $products = Product::all();
+            $categories = Category::all();
+            $subCategories = Subcategory::all();
+            return view('product.add_product', compact('products', 'categories', 'subCategories'));
+        } catch (\Exception $e) {
+            Log::error('VariantController index error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            flash()->error('An error occurred while loading the add product page. Please try again.');
+            return redirect()->back();
+        }
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'product_name' => 'array|min:3',
-            'product_name.en' => 'required',
-            'product_name.fr' => 'required',
-            'product_name.ar' => 'required',
-            'product_description' => 'array|min:3',
-            'product_description.en' => 'required',
-            'product_description.fr' => 'required',
-            'product_description.ar' => 'required',
-            'inventory_type' => 'array|min:3',
-            'inventory_type.en' => 'required',
-            'inventory_type.fr' => 'required',
-            'inventory_type.ar' => 'required',
-            'variant_images.*' => 'required',
-            'prePrice' => 'required',
-            'postPrice' => 'required',
-            'ex_price' => 'required|nullable',
-            'category_name' => 'nullable',
-            'category_id' => 'nullable',
-            'sub_category' => 'nullable',
-            'sub_category_id' => 'nullable',
-            'size' => 'array',
-            'color' => 'array',
-            'quantity' => 'array'
-        ]);
+        try {
+            $request->validate([
+                'product_name' => 'array|min:3',
+                'product_name.en' => 'required',
+                'product_name.fr' => 'required',
+                'product_name.ar' => 'required',
+                'product_description' => 'array|min:3',
+                'product_description.en' => 'required',
+                'product_description.fr' => 'required',
+                'product_description.ar' => 'required',
+                'inventory_type' => 'array|min:3',
+                'inventory_type.en' => 'required',
+                'inventory_type.fr' => 'required',
+                'inventory_type.ar' => 'required',
+                'variant_images.*' => 'required',
+                'prePrice' => 'required',
+                'postPrice' => 'required',
+                'ex_price' => 'required|nullable',
+                'category_name' => 'nullable',
+                'category_id' => 'nullable',
+                'sub_category' => 'nullable',
+                'sub_category_id' => 'nullable',
+                'size' => 'array',
+                'color' => 'array',
+                'quantity' => 'array'
+            ]);
         $category = null;
         $subCategory = null;
 
@@ -120,18 +133,46 @@ class VariantController extends Controller
                 }
             }
         }
+        flash()->success('Product created successfully!');
         return redirect()->route('products.index');
+        } catch (\Exception $e) {
+            Log::error('VariantController store error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            flash()->error('An error occurred while creating the product. Please try again.');
+            return redirect()->back();
+        }
     }
 
     public function show($id)
     {
-        $product = Product::find($id);
-        return view('product.restock_product', compact('product'));
+        try {
+            $product = Product::find($id);
+            if (!$product) {
+                flash()->error('Product not found.');
+                return redirect()->back();
+            }
+            return view('product.restock_product', compact('product'));
+        } catch (\Exception $e) {
+            Log::error('VariantController show error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'product_id' => $id
+            ]);
+
+            flash()->error('An error occurred while loading the product. Please try again.');
+            return redirect()->back();
+        }
     }
 
     public function update(Request  $request, Product $product)
     {
-        $request->validate([
+        try {
+            $request->validate([
             'product_name' => 'array|min:3',
             'product_name.en' => 'required',
             'product_name.fr' => 'required',
@@ -226,33 +267,72 @@ class VariantController extends Controller
                 }
             }
         }
+        flash()->success('Product updated successfully!');
         return redirect()->route('products.index');
+        } catch (\Exception $e) {
+            Log::error('VariantController update error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'product_id' => $product->id
+            ]);
+
+            flash()->error('An error occurred while updating the product. Please try again.');
+            return redirect()->back();
+        }
     }
 
     public function restock(Request $request, Product $product)
     {
-        foreach ($product->inventories as $key => $inventory) {
-            foreach ($inventory->variants as $ke => $variant) {
-                $col = $variant->color;
-                foreach ($request->$col as $k => $element) {
-                    $addedQt = Size::where('size', $k)->first();
-                    $addedQt->update([
-                        'quantity' => $element + $addedQt->quantity
-                    ]);
-                    arrivalproduct::create([
-                        'arrivalDate' => $addedQt->updated_at,
-                        'size_id' => $addedQt->id,
-                        'quantity' => $element
-                    ]);
+        try {
+            foreach ($product->inventories as $key => $inventory) {
+                foreach ($inventory->variants as $ke => $variant) {
+                    $col = $variant->color;
+                    foreach ($request->$col as $k => $element) {
+                        $addedQt = Size::where('size', $k)->first();
+                        $addedQt->update([
+                            'quantity' => $element + $addedQt->quantity
+                        ]);
+                        arrivalproduct::create([
+                            'arrivalDate' => $addedQt->updated_at,
+                            'size_id' => $addedQt->id,
+                            'quantity' => $element
+                        ]);
+                    }
                 }
             }
+            flash()->success('Product restocked successfully!');
+            return back();
+        } catch (\Exception $e) {
+            Log::error('VariantController restock error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'product_id' => $product->id
+            ]);
+
+            flash()->error('An error occurred while restocking the product. Please try again.');
+            return back();
         }
-        return back();
     }
     public function destroy($id)
     {
-        $variant = Variant::find($id);
-        $variant->delete();
-        return response()->json(200);
+        try {
+            $variant = Variant::find($id);
+            if (!$variant) {
+                return response()->json(['error' => 'Variant not found'], 404);
+            }
+            $variant->delete();
+            return response()->json(['message' => 'Variant deleted successfully'], 200);
+        } catch (\Exception $e) {
+            Log::error('VariantController destroy error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'variant_id' => $id
+            ]);
+
+            return response()->json(['error' => 'An error occurred while deleting the variant'], 500);
+        }
     }
 }

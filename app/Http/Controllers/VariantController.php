@@ -288,18 +288,39 @@ class VariantController extends Controller
             foreach ($product->inventories as $key => $inventory) {
                 foreach ($inventory->variants as $ke => $variant) {
                     $col = $variant->color;
-                    foreach ($request->$col as $k => $element) {
-                        $addedQt = Size::where('size', $k)
-                            ->where('variant_id', $variant->id)
-                            ->first();
-                        $addedQt->update([
-                            'quantity' => $element + $addedQt->quantity
-                        ]);
-                        arrivalproduct::create([
-                            'arrivalDate' => $addedQt->updated_at,
-                            'size_id' => $addedQt->id,
-                            'quantity' => $element
-                        ]);
+                    if (isset($request->$col)) {
+                        foreach ($request->$col as $k => $element) {
+                            // Skip if quantity is 0 or empty
+                            if (empty($element) || $element <= 0) {
+                                continue;
+                            }
+
+                            // Find existing size or create new one
+                            $sizeRecord = Size::where('size', $k)
+                                ->where('variant_id', $variant->id)
+                                ->first();
+
+                            if ($sizeRecord) {
+                                // Update existing size
+                                $sizeRecord->update([
+                                    'quantity' => $element + $sizeRecord->quantity
+                                ]);
+                            } else {
+                                // Create new size record
+                                $sizeRecord = Size::create([
+                                    'variant_id' => $variant->id,
+                                    'size' => $k,
+                                    'quantity' => $element
+                                ]);
+                            }
+
+                            // Create arrival record
+                            arrivalproduct::create([
+                                'arrivalDate' => $sizeRecord->updated_at,
+                                'size_id' => $sizeRecord->id,
+                                'quantity' => $element
+                            ]);
+                        }
                     }
                 }
             }

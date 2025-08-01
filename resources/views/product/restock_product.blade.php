@@ -18,15 +18,23 @@
                             <div style="background-color: {{ $variant->color }}" class="w-10 h-10 rounded-full">.</div>
                         </div>
                         <div class="flex flex-col gap-3">
-                            @foreach ($variant->sizes as $size)
+                            @php
+                                $allSizes = \App\Models\Size::getAllSizesForVariant($variant->id);
+                            @endphp
+                            @foreach ($allSizes as $sizeData)
                                 <div id="infoContainer" class="flex justify-between">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-lg font-bold ">Size: {{ $size->size }}</p>
-                                        <p>Current Stock: {{ $size->quantity }}</p>
+                                        <p class="text-lg font-bold ">Size: {{ $sizeData['size'] }}</p>
+                                        <p class="{{ $sizeData['exists'] ? 'text-green-600' : 'text-gray-500' }}">
+                                            Current Stock: {{ $sizeData['quantity'] }}
+                                            @if (!$sizeData['exists'])
+                                                <span class="text-sm text-gray-400">(Not in stock)</span>
+                                            @endif
+                                        </p>
                                     </div>
-                                    
+
                                     <input value="0" type="number" placeholder="Add Quantity" class="input-number"
-                                        name="{{ $variant->color }}[{{ $size->size }}]" id="">
+                                        name="{{ $variant->color }}[{{ $sizeData['size'] }}]" id="">
                                 </div>
                             @endforeach
                         </div>

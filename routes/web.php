@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArrivalproductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandController;
 use App\Http\Controllers\CommandVariantController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\VariantController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\CommandVariant;
@@ -35,6 +37,8 @@ Route::middleware(['auth', RoleMiddleware::class])->group(function () {
     Route::delete('/delete/variant/{id}', [VariantController::class, 'destroy'])->name('variant.delete');
     Route::delete('/delete/image/{id}', [ImageController::class, 'destroy'])->name('image.delete');
     Route::delete('blogs/delete/{blog}', [BlogController::class, 'destroy'])->name('blog.delete');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::delete('/subcategories/{subcategory}', [SubcategoryController::class, 'destroy'])->name('subcategories.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -71,8 +75,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/addproduct', [VariantController::class, 'index'])->name('product.index');
     Route::get('/restock/variant/{id}', [VariantController::class, 'show'])->name('variant.show');
     Route::patch('/restock/variant/{product}', [VariantController::class, 'restock'])->name('variant.restock');
-    // images 
+    // images
     Route::post('/upload/image', [ImageController::class, 'store'])->name('image.store');
+
+    // Categories and Subcategories
+    Route::resource('categories', CategoryController::class);
+    Route::resource('subcategories', SubcategoryController::class);
 });
 //Contact :
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');

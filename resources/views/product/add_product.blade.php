@@ -245,12 +245,9 @@
                                                 <select x-on:input="checkVariant.check_size[0] = true"
                                                     x-model="size.value" x-bind:name="`size[${col.hex}_${i + 1}]`">
                                                     <option selected disabled>Select a size</option>
-                                                    <option value="XS">XS</option>
-                                                    <option value="S">S</option>
-                                                    <option value="M">M</option>
-                                                    <option value="L">L</option>
-                                                    <option value="XL">XL</option>
-                                                    <option value="XXL">XXL</option>
+                                                    @foreach(\App\Models\Size::AVAILABLE_SIZES as $size)
+                                                        <option value="{{ $size }}">{{ $size }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="flex flex-col gap-2">

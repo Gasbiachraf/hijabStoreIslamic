@@ -27,7 +27,10 @@ class ProductCollection extends ResourceCollection
                         'postPrice' => $inventory->postPrice,
                         'exPrice' => $inventory->exPrice,
                         'type' => $inventory->type,
-                        'variants' => $inventory->variants->map(function ($variant) {
+                        'variants' => $inventory->variants->filter(function ($variant) {
+                            // Only include variants that have at least one size with quantity > 0
+                            return $variant->sizes->sum('quantity') > 0;
+                        })->map(function ($variant) {
                             return [
                                 'images' => $variant->images->map(function ($img){
                                     return $img->path;

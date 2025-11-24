@@ -24,10 +24,7 @@ class productController extends Controller
     }
     public function colors()
     {
-        // Only get variants that have at least one size with quantity > 0
-        $colors = Variant::whereHas('sizes', function ($query) {
-            $query->where('quantity', '>', 0);
-        })->distinct()->pluck('color');
+        $colors = Variant::distinct()->pluck('color');
         return response()->json($colors);
     }
 }

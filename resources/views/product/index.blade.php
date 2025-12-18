@@ -62,7 +62,7 @@
                                 @foreach ($inventories as $inventory)
                                     <tr class="bg-white border-b hover:bg-gray-50">
                                         <td class="px-6 py-3">
-                                            @if ($inventory->variants->first()->images->first())
+                                            @if ($inventory->variants->first() && $inventory->variants->first()->images->first())
                                             <img src="{{ asset('storage/images/' . $inventory->variants->first()->images->first()->path) }}"
                                             alt="Product Image" class="w-16 h-16 object-cover rounded-md">
                                             @else

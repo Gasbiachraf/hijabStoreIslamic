@@ -20,7 +20,7 @@
 </head>
 
 <body class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-no-repeat bg-center"
-    style="background-image:url('{{ asset('assets/images/hijabbg.png') }}'); background-size: cover; background-position: center;">
+    style="background-image:url('{{ asset('assets/images/hijabbg.jpeg') }}'); background-size: cover; background-position: center;">
     {{-- <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/hijab_background.jpg') }}');"></div> --}}
 
     @auth

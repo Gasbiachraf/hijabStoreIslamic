@@ -9,6 +9,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js" defer></script>
@@ -17,8 +19,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/hola.js'])
 </head>
 
-<body class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
-    style="background-image:url('images/hijabbg.png')">
+<body class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-no-repeat bg-center"
+    style="background-image:url('{{ asset('assets/images/hijabbg.png') }}'); background-size: cover; background-position: center;">
     {{-- <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('{{ asset('images/hijab_background.jpg') }}');"></div> --}}
 
     @auth
@@ -42,15 +44,14 @@
         </div>
     @else
         <!-- If the user is NOT authenticated (Show Login Form) -->
-        <div class="h-screen w-screen flex items-center justify-center bg-gray-900 bg-cover bg-no-repeat"
-            style="background-image:url('{{ asset('assets/images/hijabbg.png') }}')">
-            <div class="rounded-xl bg-gray-800 bg-opacity-50 px-16 py-10 shadow-lg backdrop-blur-sm max-sm:px-8">
-                <div class="text-white">
-                    <div class="mb-8 flex flex-col items-center">
-                        <img src="{{ asset('assets/images/hijabilogo.png') }}" width="150"
-                            alt="Instagram Logo" />
-                        {{-- <h1 class="mb-2 text-2xl font-semibold">Instagram</h1> --}}
-                        <span class="text-gray-300">Enter Login Details</span>
+        <div class="h-screen w-screen flex items-center justify-center">
+            <div class="rounded-xl bg-white bg-opacity-90 backdrop-blur-sm px-10 py-6 shadow-xl max-sm:px-6 w-full max-w-sm -mt-16">
+                <div>
+                    <div class="mb-6 flex flex-col items-center">
+                        <img src="{{ asset('assets/images/hijabilogo.png') }}" width="120"
+                            alt="Hijab Store Logo" />
+                        <h2 class="mt-1 text-xl font-semibold text-amber-800" style="font-family: 'Dancing Script', cursive;">Hijab store islamic</h2>
+                        <span class="mt-1 text-xs text-gray-600">Enter Login Details</span>
                     </div>
 
                     <form method="POST" action="{{ route('login') }}">
@@ -58,42 +59,42 @@
 
                         <!-- Email Address -->
                         <div>
-                            <x-input-label for="email" :value="__('Email')" class="text-gray-300" />
+                            <x-input-label for="email" :value="__('Email')" class="text-gray-700 text-sm" />
                             <x-text-input id="email"
-                                class="block mt-1 w-full rounded-lg border-gray-600 bg-gray-700 text-white focus:border-indigo-500 focus:ring-indigo-500"
+                                class="block mt-1 w-full rounded-lg border-gray-300 bg-amber-50 text-gray-800 placeholder-amber-200 focus:border-amber-500 focus:ring-amber-500 text-sm py-2"
                                 type="email" name="email" :value="old('email')" required autofocus
-                                autocomplete="username" />
-                            <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400" />
+                                autocomplete="username" placeholder="Email" />
+                            <x-input-error :messages="$errors->get('email')" class="mt-1 text-red-500 text-xs" />
                         </div>
 
                         <!-- Password -->
-                        <div class="mt-4">
-                            <x-input-label for="password" :value="__('Password')" class="text-gray-300" />
+                        <div class="mt-3">
+                            <x-input-label for="password" :value="__('Password')" class="text-gray-700 text-sm" />
                             <x-text-input id="password"
-                                class="block mt-1 w-full rounded-lg border-gray-600 bg-gray-700 text-white focus:border-indigo-500 focus:ring-indigo-500"
-                                type="password" name="password" required autocomplete="current-password" />
-                            <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-400" />
+                                class="block mt-1 w-full rounded-lg border-gray-300 bg-amber-50 text-gray-800 placeholder-amber-200 focus:border-amber-500 focus:ring-amber-500 text-sm py-2"
+                                type="password" name="password" required autocomplete="current-password" placeholder="Password" />
+                            <x-input-error :messages="$errors->get('password')" class="mt-1 text-red-500 text-xs" />
                         </div>
 
                         <!-- Remember Me -->
-                        <div class="block mt-4">
+                        <div class="block mt-3">
                             <label for="remember_me" class="inline-flex items-center">
                                 <input id="remember_me" type="checkbox"
-                                    class="rounded border-gray-600 bg-gray-700 text-indigo-500 shadow-sm focus:ring-indigo-500"
+                                    class="rounded border-gray-300 bg-amber-50 text-amber-600 shadow-sm focus:ring-amber-500"
                                     name="remember">
-                                <span class="ms-2 text-sm text-gray-300">{{ __('Remember me') }}</span>
+                                <span class="ms-2 text-xs text-gray-700">{{ __('Remember me') }}</span>
                             </label>
                         </div>
-                        <div class="flex items-center justify-between mt-4">
+                        <div class="flex items-center justify-between mt-3">
                             @if (Route::has('password.request'))
-                                <a class="underline text-sm text-gray-400 hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                <a class="underline text-xs text-amber-700 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
                                     href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
 
                             <x-primary-button
-                                class="ms-3 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 text-white font-semibold py-2 px-4 rounded-lg">
+                                class="ms-3 bg-amber-700 hover:bg-amber-800 focus:ring-amber-500 text-white font-semibold py-2 px-5 rounded-lg uppercase text-sm">
                                 {{ __('Log in') }}
                             </x-primary-button>
                         </div>

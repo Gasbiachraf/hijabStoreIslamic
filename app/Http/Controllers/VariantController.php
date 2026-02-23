@@ -291,7 +291,7 @@ class VariantController extends Controller
                     if (isset($request->$col)) {
                         foreach ($request->$col as $k => $element) {
                             // Skip if quantity is 0 or empty
-                            if (empty($element) || $element <= 0) {
+                            if (empty($element) || $element == 0) {
                                 continue;
                             }
 
@@ -301,30 +301,54 @@ class VariantController extends Controller
                                 ->first();
 
                             if ($sizeRecord) {
+                                // Calculate new quantity (can be positive or negative)
+                                $newQuantity = $sizeRecord->quantity + $element;
+                                
+                                // Prevent negative stock
+                                if ($newQuantity < 0) {
+                                    flash()->error("Cannot reduce stock below 0 for size '{$k}' in color variant. Current stock: {$sizeRecord->quantity}, attempted reduction: " . abs($element));
+                                    return back();
+                                }
+                                
                                 // Update existing size
                                 $sizeRecord->update([
-                                    'quantity' => $element + $sizeRecord->quantity
+                                    'quantity' => $newQuantity
                                 ]);
+                                
+                                // Only create arrival record for positive adjustments (new stock arrivals)
+                                if ($element > 0) {
+                                    arrivalproduct::create([
+                                        'arrivalDate' => $sizeRecord->updated_at,
+                                        'size_id' => $sizeRecord->id,
+                                        'quantity' => $element
+                                    ]);
+                                }
                             } else {
-                                // Create new size record
+                                // Can't reduce stock that doesn't exist
+                                if ($element < 0) {
+                                    flash()->error("Cannot reduce stock for size '{$k}' that doesn't exist in this variant.");
+                                    return back();
+                                }
+                                
+                                // Create new size record (only for positive values)
                                 $sizeRecord = Size::create([
                                     'variant_id' => $variant->id,
                                     'size' => $k,
                                     'quantity' => $element
                                 ]);
+                                
+                                // Create arrival record
+                                arrivalproduct::create([
+                                    'arrivalDate' => $sizeRecord->created_at,
+                                    'size_id' => $sizeRecord->id,
+                                    'quantity' => $element
+                                ]);
                             }
-
-                            // Create arrival record
-                            arrivalproduct::create([
-                                'arrivalDate' => $sizeRecord->updated_at,
-                                'size_id' => $sizeRecord->id,
-                                'quantity' => $element
-                            ]);
                         }
                     }
                 }
             }
-            flash()->success('Product restocked successfully!');
+            flash()->success('Stock updated successfully!');
             return back();
         } catch (\Exception $e) {
             Log::error('VariantController restock error: ' . $e->getMessage(), [
@@ -334,7 +358,7 @@ class VariantController extends Controller
                 'product_id' => $product->id
             ]);
 
-            flash()->error('An error occurred while restocking the product. Please try again.');
+            flash()->error('An error occurred while updating stock. Please try again.');
             return back();
         }
     }
